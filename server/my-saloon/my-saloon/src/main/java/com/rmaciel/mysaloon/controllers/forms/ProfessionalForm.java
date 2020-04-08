@@ -25,6 +25,17 @@ public class ProfessionalForm {
         this.cellphone = cellphone;
     }
 
+    public Professional convert() {
+		return new Professional(name, department, residencialPhone, cellphone);
+    }
+    
+    public void updateTo(Professional professional) {
+        professional.setName(this.name);
+        professional.setDepartment(this.department);
+        professional.setCellphone(this.cellphone);
+        professional.setResidencialPhone(this.residencialPhone);
+    }
+
     public String getName() {
         return this.name;
     }
@@ -39,17 +50,6 @@ public class ProfessionalForm {
 
     public String getCellphone() {
         return this.cellphone;
-    }
-
-	public Professional convert() {
-		return new Professional(name, department, residencialPhone, cellphone);
-    }
-    
-    public void updateTo(Professional professional) {
-        professional.setName(this.name);
-        professional.setDepartment(this.department);
-        professional.setCellphone(this.cellphone);
-        professional.setResidencialPhone(this.residencialPhone);
     }
 
 }

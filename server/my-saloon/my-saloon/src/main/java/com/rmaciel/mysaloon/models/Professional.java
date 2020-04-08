@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
+
 @Entity
 @Table(name = "professionals")
 public class Professional {
@@ -16,13 +18,17 @@ public class Professional {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull @Length(min = 3, max = 40)
     private String name;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private Department department;
+
+    @Length(max = 16)
     private String residencialPhone;
+
+    @Length(max = 16)
     private String cellphone;
 
     public Professional() {

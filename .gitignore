@@ -4,3 +4,21 @@ client/.vscode/*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+HELP.md
+server/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### VS Code ###
+.vscode/

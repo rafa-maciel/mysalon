@@ -6,7 +6,7 @@ client/.vscode/*
 !.vscode/extensions.json
 
 HELP.md
-server/target/
+server/my-saloon/my-saloon/target
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**

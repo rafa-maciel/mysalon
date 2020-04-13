@@ -1,22 +1,25 @@
 import ModelView from "./ModelView";
 
 export default class ProfessionalFormView extends ModelView{
+
     _template(model) {
         return `
-        <form id="professionalForm">
+            <input type="hidden" class="form-control" id="id" name="id" value="${model.professional.id ? model.professional.id : ''}">
             <div class="form-group">
                 <label for="name">Nome</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Maria Souza Silva" value="${model.professional.name}">
+                <input type="text" min="3" max="20" class="form-control ${this._getFieldErrors(model, 'name') ? 'is-invalid' : ''}" id="name" name="name" 
+                placeholder="Maria Souza Silva" value="${model.professional.name ? model.professional.name : ''}">
+                <div class="invalid-feedback">${this._getFieldErrors(model, 'name')}</div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
                 <label for="residencialPhone">Telefone</label>
-                <input type="text" class="form-control" id="residencialPhone" name="residencialPhone" value="${model.professional.residencialPhone}">
+                <input type="text" class="form-control" id="residencialPhone" name="residencialPhone" value="${model.professional.residencialPhone ? model.professional.residencialPhone : ''}">
                 </div>
                 <div class="form-group col-md-6">
                 <label for="cellphone">Celular</label>
-                <input type="text" class="form-control" id="cellphone" name="cellphone" value="${model.professional.cellphone}">
+                <input type="text" class="form-control" id="cellphone" name="cellphone" value="${model.professional.cellphone ? model.professional.cellphone : ''}">
                 </div>
             </div>
 
@@ -32,8 +35,10 @@ export default class ProfessionalFormView extends ModelView{
                 </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-lg btn-primary">Salvar</button>
-        </form>
         `;
+    }
+
+    _getFieldErrors(model, fieldName) {
+        return model.errors.map(field => field.name == fieldName ? field.message : '').join('');
     }
 }

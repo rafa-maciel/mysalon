@@ -1,9 +1,10 @@
 export default class Professional {
-    constructor(name, residencialPhone, cellphone, departament) {
+    constructor(name, residencialPhone, cellphone, departament, id='') {
         this._name = name;
         this._residencialPhone = residencialPhone;
         this._cellphone = cellphone;
         this._departament = departament;
+        this._id = id;
     }
 
     get name() {
@@ -20,5 +21,9 @@ export default class Professional {
 
     get departament() {
         return this._departament;
+    }
+
+    get id() {
+        return this._id;
     }
 }

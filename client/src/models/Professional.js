@@ -7,6 +7,10 @@ export default class Professional {
         this._id = id;
     }
 
+    equals(other) {
+        return this._id == other.id;
+    }
+
     get name() {
         return this._name;
     }

@@ -10,7 +10,7 @@ import FieldError from "../forms/FieldError";
 export default class ProfessionalController {
     constructor() {
         this._professionalsList = new ModelView(new ProfessionalsList(), 
-            new ProfessionalsListView(document.querySelector('#professionalList')), 'add');
+            new ProfessionalsListView(document.querySelector('#professionalList')), 'add', 'remove');
 
         this._form = new ModelView(new ProfessionalForm(document.querySelector('#professionalForm')),
             new ProfessionalFormView(document.querySelector('#professionalFormFields')),
@@ -24,11 +24,6 @@ export default class ProfessionalController {
        this._updateProfessionalsList();
     }
 
-    callFormForNewProfessional() {
-        this._form.clean();
-        this._showFormModal();
-    }
-
     saveFormProfessional() {
         let dto = this._form.convertToDTOModel();
         if(dto.id) {
@@ -36,6 +31,11 @@ export default class ProfessionalController {
         } else {
             this._createProfessional(dto);
         }
+    }
+
+    showNewProfessionalForm() {
+        this._form.clean();
+        this._showFormModal();
     }
 
     showEditProfessionalForm(id) {
@@ -46,6 +46,14 @@ export default class ProfessionalController {
             });
     }
 
+    deleteProfessional(id) {
+        this._service.deteleProfessional(id)
+            .then(() => {
+                this._showRemoveModal(false);
+                this._professionalsList.remove(id);
+            })
+    }
+
     _updateProfessional(professionalDto) {
         this._service.updateProfessional(professionalDto)
             .then(professional => {
@@ -53,7 +61,6 @@ export default class ProfessionalController {
                 this._showFormModal(false);
             })
             .catch(fieldErrors => {
-                console.log(fieldErrors);
                 this._form.addErrors(fieldErrors);
             });
     }
@@ -80,6 +87,14 @@ export default class ProfessionalController {
             $("#modalProfessional").modal("show");
         } else {
             $("#modalProfessional").modal("hide");
+        }
+    }
+
+    _showRemoveModal(option=false) {
+        if (option) {
+            $("#modalProfessionalRemove").modal("show");
+        } else {
+            $("#modalProfessionalRemove").modal("hide");
         }
     }
 

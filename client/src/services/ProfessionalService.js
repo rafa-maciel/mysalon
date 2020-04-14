@@ -72,4 +72,8 @@ export default class ProfessionalService {
             });
         });
     }
+
+    deteleProfessional(id) {
+        return fetch(`${this._serverURL}/${id}`, {method: 'DELETE'});
+    }
 }

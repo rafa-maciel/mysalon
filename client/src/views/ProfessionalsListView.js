@@ -28,7 +28,7 @@ export default class ProfessionalsListView extends View {
                         <td>${professional.residencialPhone}</td>
                         <td>${professional.cellphone}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-professional" data-professionalid="${professional.id}">Editar</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-professional" data-toggle="modal" data-professionalid="${professional.id}" data-target="#modalProfessional">Editar</button>
                             <button type="button" class="btn btn-outline-danger btn-sm">Remover</button>
                         </td>
                     </tr>

@@ -21,7 +21,7 @@ export default class ProfessionalController {
     }
 
     init() {
-       this._updateAllProfessionals();
+       this._updateProfessionalsList();
     }
 
     callFormForNewProfessional() {
@@ -29,9 +29,37 @@ export default class ProfessionalController {
         this._showFormModal();
     }
 
-    createProfessional() {
+    saveFormProfessional() {
         let dto = this._form.convertToDTOModel();
-        this._service.createProfessional(dto)
+        if(dto.id) {
+            this._updateProfessional(dto);
+        } else {
+            this._createProfessional(dto);
+        }
+    }
+
+    showEditProfessionalForm(id) {
+        this._service.getProfessionalByID(id)
+            .then(professional => {
+                this._form.include(professional)
+                this._showFormModal();
+            });
+    }
+
+    _updateProfessional(professionalDto) {
+        this._service.updateProfessional(professionalDto)
+            .then(professional => {
+                this._professionalsList.add(professional)
+                this._showFormModal(false);
+            })
+            .catch(fieldErrors => {
+                console.log(fieldErrors);
+                this._form.addErrors(fieldErrors);
+            });
+    }
+
+    _createProfessional(professionalDto) {
+        this._service.createProfessional(professionalDto)
             .then(professional => {
                 this._professionalsList.add(professional)
                 this._showFormModal(false);
@@ -41,11 +69,8 @@ export default class ProfessionalController {
             });
     }
 
-    editProfessional(id) {
-        console.log(id);
-    }
-
-    _updateAllProfessionals() {
+    _updateProfessionalsList() {
+        this._professionalsList.clean();
         this._service.getAllProfessionals()
             .then(professionalsList => professionalsList.forEach(professional => this._professionalsList.add(professional)));
     }

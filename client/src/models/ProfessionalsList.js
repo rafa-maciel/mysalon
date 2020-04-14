@@ -17,6 +17,12 @@ export default class ProfessionalsList {
         }
     }
 
+    remove(id) {
+        this._professionals.forEach((item, i) => {
+            if (item.id == id) this._professionals.splice(i, 1);
+        });
+    }
+
     get professionals() {
         return this._professionals;
     }

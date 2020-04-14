@@ -46,7 +46,10 @@ export default class ProfessionalController {
         this._service.getProfessionalByID(id)
             .then(professional => {
                 this._form.include(professional)
-                this._showFormModal();
+            })
+            .catch(error => {
+                this._message.update(error, 'Não foi possivel encontrar o profissional solicitado', 'warning');
+                this._showFormModal(false);
             });
     }
 

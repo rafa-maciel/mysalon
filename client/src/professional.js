@@ -12,7 +12,8 @@ document.querySelector('#professionalForm').addEventListener('submit', event => 
     controller.saveFormProfessional();
 });
 
-$('#modalProfessional').on('show.bs.modal', event => {
+$('#modalProfessional').on('shown.bs.modal', event => {
+    event.preventDefault();
     let id = $(event.relatedTarget).data('professionalid');
     if (id) {
         controller.showEditProfessionalForm(id);

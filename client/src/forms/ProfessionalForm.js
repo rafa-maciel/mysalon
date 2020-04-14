@@ -18,6 +18,7 @@ export default class ProfessionalForm {
 
     include(professional) {
         this._professional = professional;
+        this._errors = [];
 
         document.querySelector('input[name="name"]').value = professional.name;
         document.querySelector('input[name="residencialPhone"]').value = professional.residencialPhone;
@@ -41,6 +42,7 @@ export default class ProfessionalForm {
 
     clean() {
         this._professional = new Professional();
+        this._errors = [];
 
         document.querySelector('input[name="name"]').value = '';
         document.querySelector('input[name="residencialPhone"]').value = '';

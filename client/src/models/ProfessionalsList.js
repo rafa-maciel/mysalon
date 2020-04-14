@@ -3,8 +3,18 @@ export default class ProfessionalsList {
         this._professionals = [];
     }
 
+    clean() {
+        this._professionals = [];
+    }
+
     add(professional) {
-        this._professionals.push(professional);
+        if (this._professionals.some(item => item.equals(professional))) {
+            this._professionals.forEach((item, i) => {
+                if (item.equals(professional)) this._professionals[i] = professional;
+            });
+        } else {
+            this._professionals.push(professional);
+        }
     }
 
     get professionals() {

@@ -1,79 +1,48 @@
 import Professional from "../models/Professional";
 import FieldError from "../forms/FieldError";
+import HttpHelper from "../helpers/HttpHelper";
 
 export default class ProfessionalService {
     constructor() {
         this._serverURL = `${SERVICE_URL}/professionals`;
-    }
-
-    _handleErrors(response) {
-        /* TODO - need to intercept the errors and throw an exception */
-        return response;
-    }
-
-    _getProfessionalFromData(data) {
-        return new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['id']);
+        this._http = new HttpHelper();
     }
 
     getAllProfessionals() {
-        return fetch(this._serverURL)
-            .then(res => this._handleErrors(res))
-            .then(res => res.json())
+        let endpoint = this._serverURL;
+        return this._http.get(endpoint)
             .then(dataArray => dataArray.map(data => this._getProfessionalFromData(data)));
     }
 
     getProfessionalByID(id) {
-        return fetch(`${this._serverURL}/${id}`)
-            .then(res => this._handleErrors(res))
-            .then(res => res.json())
+        let endpoint = `${this._serverURL}/${id}`;
+        return this._http.get(endpoint)
+            .then(data => this._getProfessionalFromData(data))
+            .catch(error => {
+                console.log(error);
+                throw new Error('Ocorreu um error na comunição com o servidor e não foi possivel encontrar o profissional solicitado');
+            });
+    }
+
+    createProfessional(professionalDto) {
+        let endpoint = this._serverURL;
+        return this._http.saveModel(endpoint, 'POST',  JSON.stringify(professionalDto))
             .then(data => this._getProfessionalFromData(data));
     }
 
-    createProfessional(professional) {
-        return new Promise((resolve, reject) => {
-            fetch(this._serverURL, {
-                method: 'POST',
-                body: JSON.stringify(professional),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(res => {
-                if (!res.ok) {
-                    res.json().then(data => data['errors'])
-                        .then(dataArray => {
-                            reject(dataArray.map(data => new FieldError(data['field'], data['defaultMessage'])))
-                        });
-                } else {
-                    res.json().then(data => new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['id']))
-                        .then(model => {resolve(model)});
-                }
-            });
-        });
-    }
-
     updateProfessional(professionalDto) {
-        return new Promise((resolve, reject) => {
-            fetch(`${this._serverURL}/${professionalDto.id}`, {
-                method: 'PUT',
-                body: JSON.stringify(professionalDto),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(res => {
-                if (!res.ok) {
-                    res.json().then(data => data['errors'])
-                        .then(dataArray => {
-                            reject(dataArray.map(data => new FieldError(data['field'], data['defaultMessage'])))
-                        });
-                } else {
-                    res.json().then(data => new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['id']))
-                        .then(model => {resolve(model)});
-                }
-            });
-        });
+        let endpoint = `${this._serverURL}/${professionalDto.id}`;
+
+        return this._http.saveModel(endpoint, 'PUT', JSON.stringify(professionalDto))
+            .then(data => this._getProfessionalFromData(data));
     }
 
     deteleProfessional(id) {
-        return fetch(`${this._serverURL}/${id}`, {method: 'DELETE'});
+        let endpoint = `${this._serverURL}/${id}`;
+        return this._http.deleteModel(endpoint);
+    }
+
+    _getProfessionalFromData(data) {
+        return new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['id']);
     }
 }

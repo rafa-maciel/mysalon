@@ -31,10 +31,14 @@ export default class HttpHelper {
             fetch(endpoint)
                 .then(res => {
                     if (res.ok && res.status == 200) {
+                        
                         res.json().then(data => {resolve(data)});
                     }else {
+                        
                         reject(res.statusText);
                     }
+                }).catch(error => {
+                    reject(error);
                 });
         });
     }

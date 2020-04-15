@@ -21,10 +21,10 @@ export default class ProfessionalController {
             'update');
 
         this._service = new ProfessionalService();
-        this.init();
+        this._init();
     }
 
-    init() {
+    _init() {
        this._updateProfessionalsList();
     }
 

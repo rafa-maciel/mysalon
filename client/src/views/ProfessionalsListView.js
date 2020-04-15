@@ -2,10 +2,6 @@ import View from './ModelView'
 
 export default class ProfessionalsListView extends View {
 
-    constructor(viewElement) {
-        super(viewElement);
-    }
-    
     _template(model) {
         return `
         <div class="table-responsive">

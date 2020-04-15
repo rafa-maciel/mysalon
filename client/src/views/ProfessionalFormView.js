@@ -27,11 +27,11 @@ export default class ProfessionalFormView extends ModelView{
                 <div class="form-group col-md-6">
                 <label for="departament">Àrea de Atuação</label>
                 <select id="departament" class="form-control" name="departament">
-                    <option value="CABELELEIRA" "${model.professional.departament == 'CABELELEIRA' ? 'selected' : ''}">Cabeleleira</option>
-                    <option value="MANICURE" "${model.professional.departament == 'MANICURE' ? 'selected' : ''}">Manicure</option>
-                    <option value="DESIGNSOBRANCELHAS" "${model.professional.departament == 'DESIGNSOBRANCELHAS' ? 'selected' : ''}">Design de Sobrancelhas</option>
-                    <option value="DEPILADORA" "${model.professional.departament == 'DEPILADORA' ? 'selected' : ''}">Depiladora</option>
-                    <option value="ESTETICISTA" "${model.professional.departament == 'ESTETICISTA' ? 'selected' : ''}">Esteticista</option>
+                    <option value="CABELELEIRA" ${model.professional.departament == 'CABELELEIRA' ? 'selected' : ''}>Cabeleleira</option>
+                    <option value="MANICURE" ${model.professional.departament == 'MANICURE' ? 'selected' : ''}>Manicure</option>
+                    <option value="DESIGNER_SOBRANCELHAS" ${model.professional.departament == 'DESIGNSOBRANCELHAS' ? 'selected' : ''}>Design de Sobrancelhas</option>
+                    <option value="DEPILADORA" ${model.professional.departament == 'DEPILADORA' ? 'selected' : ''}>Depiladora</option>
+                    <option value="ESTETICISTA" ${model.professional.departament == 'ESTETICISTA' ? 'selected' : ''}>Esteticista</option>
                 </select>
                 </div>
             </div>

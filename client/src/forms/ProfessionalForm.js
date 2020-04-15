@@ -1,9 +1,8 @@
 import Professional from '../models/Professional'
 import ProfessionalDTO from '../dtos/ProfessionalDTO';
-import FieldError from './FieldError';
 
 export default class ProfessionalForm {
-    constructor(formElement) {
+    constructor() {
         this._professional = new Professional();
         this._errors = [];
     }
@@ -12,18 +11,13 @@ export default class ProfessionalForm {
         return this._professional;
     }
 
-    get errors() {
+    get errors() { 
         return this._errors;
     }
 
     include(professional) {
         this._professional = professional;
         this._errors = [];
-
-        document.querySelector('input[name="name"]').value = professional.name;
-        document.querySelector('input[name="residencialPhone"]').value = professional.residencialPhone;
-        document.querySelector('input[name="cellphone"]').value = professional.cellphone;
-        document.querySelector('select[name="departament"]').value = professional.departament;
     }
 
     convertToDTOModel() {
@@ -43,10 +37,5 @@ export default class ProfessionalForm {
     clean() {
         this._professional = new Professional();
         this._errors = [];
-
-        document.querySelector('input[name="name"]').value = '';
-        document.querySelector('input[name="residencialPhone"]').value = '';
-        document.querySelector('input[name="cellphone"]').value = '';
-        document.querySelector('select[name="departament"]').value = '';
     }
 }

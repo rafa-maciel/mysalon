@@ -12,7 +12,7 @@ export default class ProfessionalController {
         this._professionalsList = new ModelView(new ModelList(), 
             new ProfessionalsListView(document.querySelector('#professionalList')), 'add', 'remove');
 
-        this._form = new ModelView(new ProfessionalForm(document.querySelector('#professionalForm')),
+        this._form = new ModelView(new ProfessionalForm(),
             new ProfessionalFormView(document.querySelector('#professionalFormFields')),
             'clean', 'include', 'addErrors');
 

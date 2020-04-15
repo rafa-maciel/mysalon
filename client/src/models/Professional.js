@@ -1,5 +1,8 @@
-export default class Professional {
+import Model from "./Model";
+
+export default class Professional extends Model{
     constructor(name, residencialPhone, cellphone, departament, id='') {
+        super();
         this._name = name;
         this._residencialPhone = residencialPhone;
         this._cellphone = cellphone;
@@ -9,6 +12,10 @@ export default class Professional {
 
     equals(other) {
         return this._id == other.id;
+    }
+
+    equalsFor(id) {
+        return this._id == id; 
     }
 
     get name() {

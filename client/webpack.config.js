@@ -10,7 +10,8 @@ plugins.push(new webpack.DefinePlugin({ SERVICE_URL }));
 
 module.exports = {
   entry: {
-      professional: './src/professional.js'
+    professional: './src/professional.js',
+    customer: './src/customer.js',
   },
   output: {
     filename: '[name].bundle.js',

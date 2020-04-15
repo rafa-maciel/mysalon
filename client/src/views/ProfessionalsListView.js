@@ -20,7 +20,7 @@ export default class ProfessionalsListView extends View {
                 </tr>
             </thead>
             <tbody>
-                ${model.professionals.map(professional => 
+                ${model.list.map(professional => 
                     `
                     <tr>    
                         <td>${professional.name}</td>

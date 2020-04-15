@@ -37,26 +37,48 @@ export default class CustomerController {
         this._showFormModal();
     }
 
+    showEditCustomerForm(id) {
+        this._service.getCustomerByID(id)
+            .then(customer => {
+                this._form.include(customer);
+
+            })
+            .catch(error => {
+                this._message.update(error, 'Não foi possivel encontrar o cliente solicitado', 'warning');
+                this._showFormModal(false);
+            });
+    }
+
     saveCustomerForm() {
         let dto = this._form.convertToDTOModel();
         if (dto.id) {
-
+            this._updateViewsFromSaveForm(
+                this._service.updateCustomer(dto), 
+                'atualizado'
+            )
         } else {
-            this._service.createCustomer(dto)
-                .then(customer => {
-                    this._customersList.add(customer);
-                    this._message.update(`${customer.fullname} foi cadastrado com sucesso`,
-                    'Cliente Cadastrado!', 
-                    'success');
-
-                    this._showFormModal(false);
-                })
-                .catch(fieldErrors => {
-                    this._form.addErrors(fieldErrors);
-                });
+            this._updateViewsFromSaveForm(
+                this._service.createCustomer(dto), 
+                'cadastrado'
+            )
         }
     }
 
+
+    _updateViewsFromSaveForm(promisse, actionLabel) {
+        promisse
+            .then(customer => {
+                this._customersList.add(customer);
+                this._message.update(`${customer.fullname} foi ${actionLabel} com sucesso`,
+                `Cliente ${actionLabel}!`, 
+                'success');
+
+                this._showFormModal(false);
+            })
+            .catch(fieldErrors => {
+                this._form.addErrors(fieldErrors);
+            });
+    }
 
     _updateProfessionalsOnForm() {
         new ProfessionalService().getAllProfessionals()

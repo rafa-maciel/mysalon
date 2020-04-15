@@ -6,7 +6,7 @@ $('#modalCustomer').on('shown.bs.modal', event => {
     event.preventDefault();
     let id = $(event.relatedTarget).data('customerid');
     if (id) {
-        /* controller.showEditProfessionalForm(id); */
+        controller.showEditCustomerForm(id);
     } else {
         controller.showNewCustomerForm();
     }

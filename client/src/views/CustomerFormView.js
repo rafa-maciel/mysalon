@@ -32,7 +32,7 @@ export default class CustomerFormView extends ModelView {
                     <label for="professionalEngaged">Profissional Responsável</label>
                     <select id="professionalEngaged" class="form-control" name="professionalEngaged">
                         ${model.professionalList.map(professional => `
-                            <option value="${professional.id}" "${model.customer.professionalEngaged == professional.name ? 'selected' : ''}">${professional.name}</option>
+                            <option value="${professional.id}" ${model.customer.professionalEngaged == professional.name ? 'selected' : ''}>${professional.name}</option>
                         `).join('')}
                     </select>
                 </div>

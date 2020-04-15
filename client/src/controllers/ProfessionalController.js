@@ -1,15 +1,15 @@
 import ModelView from "../helpers/BindProxyModelView";
-import ProfessionalsList from "../models/ProfessionalsList";
 import ProfessionalsListView from "../views/ProfessionalsListView";
 import ProfessionalForm from "../forms/ProfessionalForm";
 import ProfessionalFormView from "../views/ProfessionalFormView";
 import ProfessionalService from "../services/ProfessionalService";
 import AlertMessage from "../models/AlertMessage";
 import AlertMessageView from "../views/AlertMessageView";
+import ModelList from "../models/ModelList";
 
 export default class ProfessionalController {
     constructor() {
-        this._professionalsList = new ModelView(new ProfessionalsList(), 
+        this._professionalsList = new ModelView(new ModelList(), 
             new ProfessionalsListView(document.querySelector('#professionalList')), 'add', 'remove');
 
         this._form = new ModelView(new ProfessionalForm(document.querySelector('#professionalForm')),

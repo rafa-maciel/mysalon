@@ -17,9 +17,25 @@ export default class CustomerService {
             });
     }
 
+    getCustomerByID(id) {
+        let endpoint = `${this._serverURL}/${id}`;
+        return this._http.get(endpoint)
+            .then(data => this._getCustomerFromData(data))
+            .catch(error => {
+                console.log(error);
+                throw new Error('Ocorreu um error na comunição com o servidor e não foi possivel encontrar o cliente solicitado');
+            });
+    }
+
     createCustomer(customerDto) {
         let endpoint = this._serverURL;
         return this._http.saveModel(endpoint, 'POST', JSON.stringify(customerDto))
+            .then(data => this._getCustomerFromData(data));
+    }
+
+    updateCustomer(customerDto) {
+        let endpoint = `${this._serverURL}/${customerDto.id}`;
+        return this._http.saveModel(endpoint, 'PUT', JSON.stringify(customerDto))
             .then(data => this._getCustomerFromData(data));
     }
 

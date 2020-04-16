@@ -25,8 +25,8 @@ export default class CustomerListView extends ModelView {
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" 
                                 data-customerid="${customer.id}" data-target="#modalCustomer">Editar</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modalProfessionalRemove" 
-                                data-professionalid="${customer.id}" data-professional="${customer.fullname}">Remover</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modalCustomerRemove" 
+                                data-customerid="${customer.id}" data-customer="${customer.fullname}">Remover</button>
                         </td>
                     </tr>
                     `        

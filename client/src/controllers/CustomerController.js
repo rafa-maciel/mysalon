@@ -64,6 +64,20 @@ export default class CustomerController {
         }
     }
 
+    deleteCustomer(id) {
+        this._service.deleteCustomer(id)
+            .then(() => {
+                this._customersList.remove(id);
+                this._message.update('Os dados do cliente foram removidos definitivamente',
+                'Cliente removido!', 'info');
+                this._showRemoveFormModal(false);
+            }).catch(error => {
+                this._message.update(error.message,
+                    'Erro na operação!', 'warning');
+                this._showRemoveFormModal(false);
+            });
+    }
+
 
     _updateViewsFromSaveForm(promisse, actionLabel) {
         promisse
@@ -89,9 +103,17 @@ export default class CustomerController {
 
     _showFormModal(option=true) {
         if (option) {
-            $("#modalCustomer").modal("show");
+            $("#modalCustomerRemove").modal("show");
         } else {
-            $("#modalCustomer").modal("hide");
+            $("#modalCustomerRemove").modal("hide");
+        }
+    }
+
+    _showRemoveFormModal(option=true) {
+        if (option) {
+            $("#modalCustomerRemove").modal("show");
+        } else {
+            $("#modalCustomerRemove").modal("hide");
         }
     }
 

@@ -23,7 +23,18 @@ export default class HttpHelper {
     }
 
     deleteModel(endpoint) {
-        return fetch(endpoint, {method: 'DELETE'});
+        return new Promise((resolve, reject) => {
+            fetch(endpoint, {method: 'DELETE'})
+                .then(res => {
+                    if (res.ok && res.status == 200) {
+                        resolve('Model removed as requested');
+                    } else {
+                        reject(res.statusText);
+                    }
+                }).catch(error => {
+                    reject(error);
+                });
+        });
     }
 
     get(endpoint) {

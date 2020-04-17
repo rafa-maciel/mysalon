@@ -1,7 +1,11 @@
 import ModelView from './ModelView'
+import PageableNavigation from '../components/PageableNavigation';
 
 export default class CustomerListView extends ModelView {
+    
     _template(model) {
+        let pageableNav = PageableNavigation.create(model.pageableInfo);
+        
         return `
         <div class="table-responsive">
             <table class="table table-striped table-sm">
@@ -33,6 +37,8 @@ export default class CustomerListView extends ModelView {
                 ).join('')}
             </tbody>
             </table>
+            
+            ${pageableNav}
         </div>
         `;
     }

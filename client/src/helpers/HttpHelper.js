@@ -53,4 +53,22 @@ export default class HttpHelper {
                 });
         });
     }
+
+    getFiltered(endpoint, bodyData) {
+        let url = `${endpoint}?name=${bodyData['name']}&professionalEngagedName=${bodyData['professionalEngagedName']}`;
+        return new Promise((resolve, reject) => {
+            fetch(url)
+                .then(res => {
+                    if (res.ok && res.status == 200) {
+                        
+                        res.json().then(data => {resolve(data)});
+                    }else {
+                        
+                        reject(res.statusText);
+                    }
+                }).catch(error => {
+                    reject(error);
+                });
+        });
+    }
 }

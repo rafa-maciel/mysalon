@@ -7,16 +7,22 @@ import AlertMessageView from "../views/AlertMessageView";
 import CustomerForm from "../forms/CustomerForm";
 import ProfessionalService from "../services/ProfessionalService";
 import CustomerFormView from "../views/CustomerFormView";
+import CustomerFilterForm from "../forms/CustomerFilterForm";
+import CustomerFilterFormView from "../views/CustomerFilterFormView";
 
 export default class CustomerController {
     constructor() {
         this._customersList = new ProxyModelView(new ModelList(), 
             new CustomerListView(document.querySelector('#customerList')),
-            'add', 'remove');
+            'add', 'remove', 'clean');
 
         this._form = new ProxyModelView(new CustomerForm(),
             new CustomerFormView(document.querySelector('#customerFormFields')),
             'clean', 'include', 'addErrors', 'updateProfessionalsList');
+
+        this._filterForm = new ProxyModelView(new CustomerFilterForm(),
+            new CustomerFilterFormView(document.querySelector("#customerFilter .form-fields")),
+            'updateProfessionalsList');
 
         this._message = new ProxyModelView(new AlertMessage(),
             new AlertMessageView(document.querySelector('#alertMessage')), 
@@ -28,8 +34,36 @@ export default class CustomerController {
     }
 
     _init() {
-        this._updateCustomerList();
-        this._updateProfessionalsOnForm();
+        this.updateCustomerList();
+
+        /* Update the form with professional list */
+        new ProfessionalService().getAllProfessionals()
+            .then(professionals => {
+                this._form.updateProfessionalsList(professionals);
+                this._filterForm.updateProfessionalsList(professionals);
+        });
+
+    }
+
+    updateCustomerList() {
+        this._customersList.clean();
+
+        let dataFilter = this._filterForm.getJSONParameters();
+        this._service.getCustomers(dataFilter)
+            .then(pageableContent => {
+                this._customersList.updatePageableInfo(pageableContent['pageable']);
+                pageableContent['customers'].forEach(customer => {
+                    this._customersList.add(customer);
+                });
+                this._message.update('',
+                    'Lista de Clientes atualizada!', 
+                    'info');
+            })
+            .catch(error => {
+                this._message.update(error.message,
+                    'A conexão falhou',
+                    'info');
+            });
     }
 
     showNewCustomerForm() {
@@ -94,13 +128,6 @@ export default class CustomerController {
             });
     }
 
-    _updateProfessionalsOnForm() {
-        new ProfessionalService().getAllProfessionals()
-            .then(professionals => {
-                this._form.updateProfessionalsList(professionals);
-            });
-    }
-
     _showFormModal(option=true) {
         if (option) {
             $("#modalCustomerRemove").modal("show");
@@ -117,22 +144,7 @@ export default class CustomerController {
         }
     }
 
-    _updateCustomerList() {
-        this._service.getCustomers()
-            .then(customers => {
-                customers.forEach(customer => {
-                    this._customersList.add(customer);
-                });
-                this._message.update('A lista de costumers foi sincronizada com o servidor',
-                    'Lista de Clientes atualizada!', 
-                    'info');
-            })
-            .catch(error => {
-                this._message.update(error.message,
-                    'A conexão falhou',
-                    'info');
-            });
-    }
+    
 
 
     

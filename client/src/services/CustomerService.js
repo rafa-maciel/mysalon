@@ -1,5 +1,6 @@
 import HttpHelper from "../helpers/HttpHelper";
 import Customer from "../models/Customer";
+import Pageable from "../models/Pageable";
 
 export default class CustomerService {
     constructor() {
@@ -7,10 +8,15 @@ export default class CustomerService {
         this._http = new HttpHelper();
     }
 
-    getCustomers() {
+    getCustomers(dataFilter) {
         let endpoint = this._serverURL;
-        return this._http.get(endpoint)
-            .then(dataArray => dataArray.map(data => this._getCustomerFromData(data)))
+        return this._http.getFiltered(endpoint, dataFilter)
+            .then(pageableContent => {
+                return {
+                    'pageable': this._getPageableCustomersFromData(pageableContent),
+                    'customers': pageableContent['content'].map(data => this._getCustomerFromData(data))
+                }
+            })
             .catch(error => {
                 console.log(error);
                 throw new Error('Não foi possivel conectar ao servidor');
@@ -46,6 +52,13 @@ export default class CustomerService {
                 console.log(error);
                 throw new Error('Não foi possivel remover o cliente solicitado');
             });
+    }
+
+    _getPageableCustomersFromData(data) {
+        let pgdetails = data['pageable']
+        return new Pageable(pgdetails['pageNumber'], pgdetails['pageSize'], data['totalElements'], 
+            data['totalPages'], data['numberOfElements'], data['first'], data['last'], data['number'], 
+            data['size'], data['empty']);
     }
 
     _getCustomerFromData(data) {

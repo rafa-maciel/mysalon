@@ -34,3 +34,8 @@ document.querySelector('#formRemoveCustomer').addEventListener('submit', event =
     let id = document.querySelector('#formRemoveCustomer input[name="id"]').value;
     controller.deleteCustomer(id);
 });
+
+document.querySelector("#customerFilterForm").addEventListener('submit', event => {
+    event.preventDefault();
+    controller.updateCustomerList();
+});

@@ -14,6 +14,8 @@ import com.rmaciel.mysaloon.repositories.CustomerRepository;
 import com.rmaciel.mysaloon.repositories.ProfessionalRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "http://localhost:9000")
@@ -80,13 +83,23 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<CustomerDTO>> listAll() {
         List<CustomerDTO> customers = repository.findAll()
             .stream().map(customer -> new CustomerDTO(customer))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(customers);
-    }   
+    }
+    
+    @GetMapping
+    public Page<CustomerDTO> findByNameAndProfessionalEngaged(@RequestParam(required = false, defaultValue = "") String name, 
+                                                            @RequestParam(required = false, defaultValue = "") String professionalEngagedName, 
+                                                            Pageable pageable)  {                                                
+
+        Page<Customer> page = repository.findByFullnameContainingAndProfessionalEngagedNameContaining(name, professionalEngagedName, pageable);
+        
+        return page.map(CustomerDTO::new);
+    }
 
 }

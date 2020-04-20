@@ -12,6 +12,7 @@ module.exports = {
   entry: {
     professional: './src/professional.js',
     customer: './src/customer.js',
+    vendor: './src/vendor.js',
   },
   output: {
     filename: '[name].bundle.js',

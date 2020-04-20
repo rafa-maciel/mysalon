@@ -130,9 +130,9 @@ export default class CustomerController {
 
     _showFormModal(option=true) {
         if (option) {
-            $("#modalCustomerRemove").modal("show");
+            $("#modalCustomer").modal("show");
         } else {
-            $("#modalCustomerRemove").modal("hide");
+            $("#modalCustomer").modal("hide");
         }
     }
 

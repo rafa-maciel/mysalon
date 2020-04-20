@@ -1,13 +1,5 @@
 import Model from './Model'
 export default class Customer extends Model {
-    /* 
-    "id": 1,
-    "fullname": "Carla Damares",
-    "residencialPhone": "11 555655431",
-    "cellphone": "111546455446",
-    "indicatedBy": "Luiza Adriana",
-    "professionalEngagedName": "Maria Antonieta"
-    */
     constructor(fullname, residencialPhone, cellphone, indicatedBy, professionalEngaged, id='') {
         super();
         this._fullname = fullname;

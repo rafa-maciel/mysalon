@@ -18,7 +18,7 @@ public class Professional {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull @Length(min = 3, max = 40)
+    @NotNull @Length(min = 3, max = 50)
     private String name;
 
     @Enumerated(EnumType.STRING)

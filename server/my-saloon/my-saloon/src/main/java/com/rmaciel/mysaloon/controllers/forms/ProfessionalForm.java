@@ -9,7 +9,7 @@ import com.rmaciel.mysaloon.models.Professional;
 
 public class ProfessionalForm {
 
-    @NotEmpty @NotNull @Size(min = 3, max = 20)
+    @NotEmpty @NotNull @Size(min = 3, max = 50)
     private String name;
 
     @NotNull

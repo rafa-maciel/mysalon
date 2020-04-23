@@ -1,121 +1,113 @@
 import ModelView from "../helpers/BindProxyModelView";
-import ProfessionalsListView from "../views/ProfessionalsListView";
-import ProfessionalForm from "../forms/ProfessionalForm";
-import ProfessionalFormView from "../views/ProfessionalFormView";
 import ProfessionalService from "../services/ProfessionalService";
 import AlertMessage from "../models/AlertMessage";
 import AlertMessageView from "../views/AlertMessageView";
-import ModelList from "../models/ModelList";
+import Modal from '../components/Modal';
+import ProfessionalForm from '../views/ProfessionalForm';
+import Professional from "../models/Professional";
+import Button from "../components/Button";
+import ListenerAction from "../components/ListenerAction";
+import ProfessionalsTableList from "../views/ProfessionalsTableList";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default class ProfessionalController {
     constructor() {
-        this._professionalsList = new ModelView(new ModelList(), 
-            new ProfessionalsListView(document.querySelector('#professionalList')), 'add', 'remove');
-
-        this._form = new ModelView(new ProfessionalForm(),
-            new ProfessionalFormView(document.querySelector('#professionalFormFields')),
-            'clean', 'include', 'addErrors');
+        this._professionalTable = new ProfessionalsTableList('#professionalList', 
+            id => {this.editProfessional(id)},
+            id => {this.confirmRemoveProfessional(id)});
 
         this._message = new ModelView(new AlertMessage(),
             new AlertMessageView(document.querySelector('#alertMessage')), 
             'update');
+
+        this._modalForm = new Modal('#modalForm', {
+            'id': 'MForm',
+            'title': 'Formulário do Profissional',
+            'footer': true
+        });
+
+        this._modalConfirmRemove = new ConfirmModal("#modalForm", {
+            "id": "modalConfirmRemove",
+            "title": "Remover Profissional", 
+            "buttonLabel": "Remover definitivamente"
+        }, id => {this.deleteProfessional(id)});
+
+        this._professionalForm = new ProfessionalForm(this._modalForm.contentSelector);
 
         this._service = new ProfessionalService();
         this._init();
     }
 
     _init() {
-       this._updateProfessionalsList();
+        this._updateProfessionalTable();
+        this._modalForm.updateFooter(
+            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
+                new ListenerAction('click', () => {this.saveProfessionalForm()})));
+
+        document.querySelector('.btn-create-professional').addEventListener('click', () => {
+            this.createProfessional();
+        });
     }
 
-    saveFormProfessional() {
-        let dto = this._form.convertToDTOModel();
+    confirmRemoveProfessional(id) {
+        let professional = this._professionalTable.find(id);
+        this._modalConfirmRemove.update(`Você tem certeza que deseja remover definitivamente o(a) professional <strong>${professional.name}</strong> do sistema?`, 
+            professional.id);
+        this._modalConfirmRemove.show();
+    }
+
+    editProfessional(id) {
+        let professional = this._professionalTable.find(id);
+        this._professionalForm.professional = professional;
+        this._modalForm.show();
+    }
+
+    createProfessional() {
+        this._professionalForm.professional = new Professional();
+        this._modalForm.show();
+    }
+
+    saveProfessionalForm() {
+        let dto = this._professionalForm.professional;
         if(dto.id) {
-            this._updateProfessional(dto);
+            this._service.updateProfessional(dto)
+                .then(professional => {
+                    this._professionalTable.update(professional)
+                    this._modalForm.hide();
+                    this._message.update(`Os dados do(a) ${professional.name} foram atualizados com sucesso`,
+                    'Profissional atualizado!', 
+                     'success');
+                });
         } else {
-            this._createProfessional(dto);
+            this._service.createProfessional(dto)
+                .then(professional => {
+                    this._professionalTable.add(professional);
+                    this._modalForm.hide();
+                    this._message.update(`${professional.name} foi cadastrado com sucesso`,
+                        'Profissional Cadastrado!', 
+                        'success');
+            })
         }
     }
-
-    showNewProfessionalForm() {
-        this._form.clean();
-        this._showFormModal();
-    }
-
-    showEditProfessionalForm(id) {
-        this._service.getProfessionalByID(id)
-            .then(professional => {
-                this._form.include(professional)
-            })
-            .catch(error => {
-                this._message.update(error, 'Não foi possivel encontrar o profissional solicitado', 'warning');
-                this._showFormModal(false);
-            });
-    }
-
+   
     deleteProfessional(id) {
         this._service.deteleProfessional(id)
             .then(() => {
-                this._showRemoveModal(false);
-                this._professionalsList.remove(id);
+                this._modalConfirmRemove.hide();
+                this._professionalTable.remove(id);
                 this._message.update('Os dados do profissional foram removidos definitivamente',
                     'Profissional removido!', 'info');
             })
     }
 
-    _updateProfessional(professionalDto) {
-        this._service.updateProfessional(professionalDto)
-            .then(professional => {
-                this._professionalsList.add(professional)
-                this._showFormModal(false);
-                this._message.update(`Os dados do(a) ${professional.name} foram atualizados com sucesso`,
-                    'Profissional atualizado!', 
-                     'success');
-            })
-            .catch(fieldErrors => {
-                this._form.addErrors(fieldErrors);
-            });
-    }
-
-    _createProfessional(professionalDto) {
-        this._service.createProfessional(professionalDto)
-            .then(professional => {
-                this._professionalsList.add(professional)
-                this._showFormModal(false);
-                this._message.update(`${professional.name} foi cadastrado com sucesso`,
-                    'Profissional Cadastrado!', 
-                    'success');
-            })
-            .catch(fieldErrors => {
-                this._form.addErrors(fieldErrors);
-            });
-    }
-
-    _updateProfessionalsList() {
-        this._professionalsList.clean();
+    _updateProfessionalTable() {
+        this._professionalTable.clean();
         this._service.getAllProfessionals()
-            .then(professionalsList => professionalsList.forEach(professional => this._professionalsList.add(professional)));
+            .then(professionalsList => professionalsList.forEach(professional => this._professionalTable.add(professional)));
         
         this._message.update('A lista de profissionais foi sincronizada com o servidor',
             'Lista de Profissionais atualizada!', 
             'info');
     }
-
-    _showFormModal(option=true) {
-        if (option) {
-            $("#modalProfessional").modal("show");
-        } else {
-            $("#modalProfessional").modal("hide");
-        }
-    }
-
-    _showRemoveModal(option=false) {
-        if (option) {
-            $("#modalProfessionalRemove").modal("show");
-        } else {
-            $("#modalProfessionalRemove").modal("hide");
-        }
-    }
-
 
 }

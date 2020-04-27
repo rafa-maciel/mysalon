@@ -10,7 +10,7 @@ export default class CustomerService {
 
     getCustomers(dataFilter) {
         let endpoint = this._serverURL;
-        return this._http.getFiltered(endpoint, dataFilter)
+        return this._http.getFiltered(endpoint, this._getFilterData(dataFilter))
             .then(pageableContent => {
                 return {
                     'pageable': this._getPageableCustomersFromData(pageableContent),
@@ -63,6 +63,15 @@ export default class CustomerService {
 
     _getCustomerFromData(data) {
         return new Customer(data['fullname'], data['residencialPhone'], data['cellphone'], data['indicatedBy'], data['professionalEngagedName'], data['id']);
+    }
+
+    _getFilterData(data) {
+        if (data.hasOwnProperty('name') || data.hasOwnProperty('professionalEngagedName')) {
+            let name = data['name'] ? data['name'] : '';
+            let professionalEngaged = data['professionalEngagedName'] ? data['professionalEngagedName'] : '';
+            return `name=${name}&professionalEngagedName=${professionalEngaged}`;
+        }
+        return '';
     }
 
 }

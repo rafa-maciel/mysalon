@@ -55,7 +55,7 @@ export default class HttpHelper {
     }
 
     getFiltered(endpoint, bodyData) {
-        let url = `${endpoint}?name=${bodyData['name']}&professionalEngagedName=${bodyData['professionalEngagedName']}`;
+        let url = `${endpoint}?${bodyData ? bodyData : ''}`;
         return new Promise((resolve, reject) => {
             fetch(url)
                 .then(res => {

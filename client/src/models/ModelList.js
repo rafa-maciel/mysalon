@@ -19,6 +19,10 @@ export default class ModelList {
         }
     }
 
+    find(id) {
+        return this._list.find(item => item.equalsFor(id));
+    }
+
     updatePageableInfo(pageable) {
         this._pageableInfo = pageable;
     }

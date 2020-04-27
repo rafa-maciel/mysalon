@@ -16,8 +16,8 @@ export default class ProfessionalController {
     constructor() {
         this._professionals = new ProxyModelComponent(new ModelList(),
             new ProfessionalsTable('#professionalList', 
-                id => {this.editProfessional(id)},
-                id => {this.confirmRemoveProfessional(id)}),
+                id => {this._editProfessional(id)},
+                id => {this._confirmRemoveProfessional(id)}),
             'add', 'remove');
         
 
@@ -48,7 +48,7 @@ export default class ProfessionalController {
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-professional').addEventListener('click', () => {
-            this.createProfessional();
+            this._createProfessional();
         });
     }
 
@@ -56,24 +56,6 @@ export default class ProfessionalController {
         this._modalForm.updateFooter(
             new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
                 new ListenerAction('click', () => {this.saveProfessionalForm()})));
-    }
-
-    confirmRemoveProfessional(id) {
-        let professional = this._professionals.find(id);
-        this._modalConfirmRemove.update(`Você tem certeza que deseja remover definitivamente o(a) professional <strong>${professional.name}</strong> do sistema?`, 
-            professional.id);
-        this._modalConfirmRemove.show();
-    }
-
-    editProfessional(id) {
-        let professional = this._professionals.find(id);
-        this._professionalForm.professional = professional;
-        this._modalForm.show();
-    }
-
-    createProfessional() {
-        this._professionalForm.professional = new Professional();
-        this._modalForm.show();
     }
 
     saveProfessionalForm() {
@@ -97,6 +79,24 @@ export default class ProfessionalController {
                 this._message.update('Os dados do profissional foram removidos definitivamente',
                     'Profissional removido!', 'info');
             })
+    }
+
+    _confirmRemoveProfessional(id) {
+        let professional = this._professionals.find(id);
+        this._modalConfirmRemove.update(`Você tem certeza que deseja remover definitivamente o(a) professional <strong>${professional.name}</strong> do sistema?`, 
+            professional.id);
+        this._modalConfirmRemove.show();
+    }
+
+    _editProfessional(id) {
+        let professional = this._professionals.find(id);
+        this._professionalForm.professional = professional;
+        this._modalForm.show();
+    }
+
+    _createProfessional() {
+        this._professionalForm.professional = new Professional();
+        this._modalForm.show();
     }
 
     _updateProfessionalTable() {

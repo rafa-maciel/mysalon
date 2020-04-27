@@ -11,7 +11,6 @@ export default class VendorsTable extends ModelTable{
 
         this._editAction = editAction;
         this._removeAction = removeAction;
-        this._vendors = [];
     }
 
     _createLineTableFromModel(vendor) {

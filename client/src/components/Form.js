@@ -26,7 +26,7 @@ export default class Form extends Component{
     }
 
     getData() {
-        let data = {};
+        let data = [];
         $(this._tag).serializeArray().forEach(input => {
             data[input.name] = input.value;
         });
@@ -40,7 +40,8 @@ export default class Form extends Component{
             this._component.querySelector(".fields").appendChild(this._info.initialContent);
 
         if (this._info.buttons && this._info.initialButtons)
-            this._component.querySelector(".buttons").appendChild(this._info.initialButtons);
+            this._info.initialButtons.forEach(button => 
+                this._component.querySelector(".buttons").appendChild(button));
 
     }
 

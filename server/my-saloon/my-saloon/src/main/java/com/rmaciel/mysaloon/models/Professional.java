@@ -6,6 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +32,9 @@ public class Professional {
     @Length(max = 16)
     private String cellphone;
 
+    @OneToOne(mappedBy = "professional", orphanRemoval = true)
+    private UserAccount account;
+
     public Professional() {
     }
  
@@ -39,6 +43,10 @@ public class Professional {
         this.department = department;
         this.residencialPhone = residencialPhone;
         this.cellphone = cellphone;
+    }
+
+    public String getEmail() {
+        return this.account != null ? this.account.getEmail() : null ;
     }
     
     public Long getId() {
@@ -75,6 +83,10 @@ public class Professional {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+
+    public UserAccount getAccount() {
+        return account;
     }
        
     

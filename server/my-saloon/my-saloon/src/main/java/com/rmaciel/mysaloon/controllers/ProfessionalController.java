@@ -11,6 +11,7 @@ import com.rmaciel.mysaloon.controllers.dtos.ProfessionalDTO;
 import com.rmaciel.mysaloon.controllers.forms.ProfessionalForm;
 import com.rmaciel.mysaloon.models.Professional;
 import com.rmaciel.mysaloon.repositories.ProfessionalRepository;
+import com.rmaciel.mysaloon.services.UserAccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,14 +36,21 @@ public class ProfessionalController {
     @Autowired
     private ProfessionalRepository repository;
 
+    @Autowired
+    private UserAccountService accountService;
+
     @PostMapping
     @Transactional
     @CacheEvict(value = "allProfessionals", allEntries = true)
     public ResponseEntity<ProfessionalDTO> create(@Valid @RequestBody ProfessionalForm form) {
         Professional professional = form.convert();
-        repository.save(professional);
+        professional = repository.save(professional);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ProfessionalDTO(professional));
+        if (form.hasEmail()) {
+            accountService.create(professional, form.getEmail(), form.getRole());
+        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ProfessionalDTO(professional, form.getEmail()));
     }
 
     @GetMapping("/{id}")

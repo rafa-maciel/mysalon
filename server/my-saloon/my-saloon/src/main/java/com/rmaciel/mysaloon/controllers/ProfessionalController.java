@@ -50,6 +50,7 @@ public class ProfessionalController {
             accountService.create(professional, form.getEmail(), form.getRole());
         }
         
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(new ProfessionalDTO(professional, form.getEmail()));
     }
 

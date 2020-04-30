@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.rmaciel.mysaloon.models.AccountRole;
 import com.rmaciel.mysaloon.models.Department;
 import com.rmaciel.mysaloon.models.Professional;
 
@@ -17,16 +18,26 @@ public class ProfessionalForm {
     private String residencialPhone;
     private String cellphone;
 
+    private String email;
 
-    public ProfessionalForm(String name, Department department, String residencialPhone, String cellphone) {
+    private AccountRole role;
+
+    public ProfessionalForm(String name, Department department, String residencialPhone, String cellphone, String email,
+            AccountRole role) {
         this.name = name;
         this.department = department;
         this.residencialPhone = residencialPhone;
         this.cellphone = cellphone;
+        this.email = email;
+        this.role = role;
     }
 
     public Professional convert() {
 		return new Professional(name, department, residencialPhone, cellphone);
+    }
+
+    public boolean hasEmail() {
+        return this.email != null && !this.email.isEmpty();
     }
     
     public void updateTo(Professional professional) {
@@ -50,6 +61,14 @@ public class ProfessionalForm {
 
     public String getCellphone() {
         return this.cellphone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public AccountRole getRole() {
+        return role;
     }
 
 }

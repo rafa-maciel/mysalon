@@ -10,12 +10,22 @@ public class ProfessionalDTO {
     private Department department;
     private String residencialPhone;
     private String cellphone;
-
+    private String email;
 
     public ProfessionalDTO() {
     }
 
-    public ProfessionalDTO(Professional professional){
+    public ProfessionalDTO(Professional professional) {
+        this.id = professional.getId();
+        this.name = professional.getName();
+        this.department = professional.getDepartment();
+        this.residencialPhone = professional.getResidencialPhone();
+        this.cellphone = professional.getCellphone();
+        this.email = professional.getEmail();
+    }
+
+    public ProfessionalDTO(Professional professional, String email) {
+        this.email = email;
         this.id = professional.getId();
         this.name = professional.getName();
         this.department = professional.getDepartment();
@@ -41,6 +51,10 @@ public class ProfessionalDTO {
 
     public String getCellphone() {
         return this.cellphone;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
 

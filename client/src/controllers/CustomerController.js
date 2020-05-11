@@ -13,9 +13,11 @@ import CustomersTable from "../views/CustomersTable";
 import ProxyModelComponent from "../helpers/ProxyModelComponent";
 import ConfirmModal from "../components/ConfirmModal";
 import PageableNavigation from "../components/PageableNavigation";
+import AuthFilterController from "../filters/AuthFilterController";
 
-export default class CustomerController {
+export default class CustomerController extends AuthFilterController {
     constructor() {
+        super();
         this._service = new CustomerService();
 
         this._message = new ProxyModelView(new AlertMessage(),

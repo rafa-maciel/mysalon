@@ -10,7 +10,11 @@ export default class CustomerService {
 
     getCustomers(dataFilter) {
         let endpoint = this._serverURL;
-        return this._http.getFiltered(endpoint, this._getFilterData(dataFilter))
+        let parameters = this._getFilterData(dataFilter);
+        if (parameters)
+            endpoint = endpoint + "?" + parameters;
+
+        return this._http.get(endpoint)
             .then(pageableContent => {
                 return {
                     'pageable': this._getPageableCustomersFromData(pageableContent),
@@ -35,19 +39,19 @@ export default class CustomerService {
 
     createCustomer(customerDto) {
         let endpoint = this._serverURL;
-        return this._http.saveModel(endpoint, 'POST', JSON.stringify(customerDto))
-            .then(data => this._getCustomerFromData(data));
+        return this._http.post(endpoint, JSON.stringify(customerDto))
+            .then(data => this._getCustomerFromData(data));            
     }
 
     updateCustomer(customerDto) {
         let endpoint = `${this._serverURL}/${customerDto.id}`;
-        return this._http.saveModel(endpoint, 'PUT', JSON.stringify(customerDto))
+        return this._http.put(endpoint, JSON.stringify(customerDto))
             .then(data => this._getCustomerFromData(data));
     }
 
     deleteCustomer(id) {
         let endpoint = `${this._serverURL}/${id}`
-        return this._http.deleteModel(endpoint)
+        return this._http.delete(endpoint)
             .catch(error => {
                 console.log(error);
                 throw new Error('Não foi possivel remover o cliente solicitado');

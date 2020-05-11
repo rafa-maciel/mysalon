@@ -26,20 +26,20 @@ export default class ProfessionalService {
 
     createProfessional(professionalDto) {
         let endpoint = this._serverURL;
-        return this._http.saveModel(endpoint, 'POST',  JSON.stringify(professionalDto))
+        return this._http.post(endpoint, JSON.stringify(professionalDto))
             .then(data => this._getProfessionalFromData(data));
     }
 
     updateProfessional(professionalDto) {
         let endpoint = `${this._serverURL}/${professionalDto.id}`;
 
-        return this._http.saveModel(endpoint, 'PUT', JSON.stringify(professionalDto))
+        return this._http.put(endpoint, JSON.stringify(professionalDto))
             .then(data => this._getProfessionalFromData(data));
     }
 
     deteleProfessional(id) {
         let endpoint = `${this._serverURL}/${id}`;
-        return this._http.deleteModel(endpoint);
+        return this._http.delete(endpoint);
     }
 
     _getProfessionalFromData(data) {

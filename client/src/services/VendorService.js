@@ -23,19 +23,19 @@ export default class VendorService {
     }
 
     create(vendorDto) {
-        return this._http.saveModel(this._serverUrl, 'POST', JSON.stringify(vendorDto))
+        return this._http.post(this._serverUrl, JSON.stringify(vendorDto))
             .then(data => this._getFromData(data));
     }
 
     update(vendorDto) {
         let endpoint = `${this._serverUrl}/${vendorDto.id}`;
-        return this._http.saveModel(endpoint, 'PUT', JSON.stringify(vendorDto))
+        return this._http.put(endpoint, JSON.stringify(vendorDto))
             .then(data => this._getFromData(data));
     }
 
     delete(id) {
         let endpoint = `${this._serverUrl}/${id}`;
-        return this._http.deleteModel(endpoint);
+        return this._http.delete(endpoint);
     }
 
     _getFromData(data) {

@@ -13,6 +13,7 @@ module.exports = {
     professional: './src/professional.js',
     customer: './src/customer.js',
     vendor: './src/vendor.js',
+    authentication: './src/authentication.js',
   },
   output: {
     filename: '[name].bundle.js',

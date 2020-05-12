@@ -1,8 +1,12 @@
-.container-form{
-    display: block;
+.form{
     margin: auto !important;
-    width: 50%;
     border: 3px solid green;
     padding: 10px;
+}
+
+.box-form {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
 }
 

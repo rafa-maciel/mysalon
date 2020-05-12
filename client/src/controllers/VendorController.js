@@ -12,49 +12,20 @@ import ListenerAction from '../components/ListenerAction';
 import VendorsTable from '../views/VendorsTable';
 import ProxyModelComponent from '../helpers/ProxyModelComponent';
 import ConfirmModal from '../components/ConfirmModal';
+import DefaultDashboardController from './DefaultDashboardController';
 
-export default class VendorController {
-    constructor() {
+export default class VendorController extends DefaultDashboardController {
+    _init() {
         this._service = new VendorService();
 
-        this._message = new BindProxy(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')),
-            'update');
-
-        this._modalConfirmRemove = new ConfirmModal("main", {
-            "id": "modalConfirmRemove",
-            "title": "Remover Fornecedor", 
-            "buttonLabel": "Remover definitivamente"
-        }, id => {this.delete(id)});
-
-        this._modalForm = new Modal('main', {
-            'id': 'mForm',
-            'title': 'Formulário do Fornecedor',
-            'footer': true
-        });
-
-        this._vendors = new ProxyModelComponent(new ModelList(), 
-            new VendorsTable('#vendorsList', 
-                id => {this._editVendor(id)}, 
-                id => {this._confirmRemoveVendor(id)}), 
-            'add', 'remove');
-
-        this._vendorForm = new VendorForm(this._modalForm.contentSelector);
-        
-        this._init();
-    }
-
-    _init() {
+        this._initVendorsTable();
+        this._initAlertMessages();
+        this._initVendorFormModal();
+        this._initRemoveConfirmationModal();
         this._updateVendorsList();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-vendor').addEventListener('click', () => {this._createVendor()});
-    }
-
-    _initModalFormButtons() {
-        this._modalForm.updateFooter(
-            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
-                new ListenerAction('click', () => {this.saveVendorForm()})));
     }
 
     saveVendorForm() {
@@ -81,6 +52,46 @@ export default class VendorController {
             });
         
         this._modalConfirmRemove.hide();
+    }
+
+    _initVendorFormModal() {
+        this._modalForm = new Modal('main', {
+            'id': 'mForm',
+            'title': 'Formulário do Fornecedor',
+            'footer': true
+        });
+
+        this._vendorForm = new VendorForm(this._modalForm.contentSelector);
+    }
+
+    _initVendorsTable() {
+        this._vendors = new ProxyModelComponent(new ModelList(), 
+            new VendorsTable('#vendorsList', 
+                id => {this._editVendor(id)}, 
+                id => {this._confirmRemoveVendor(id)}), 
+            'add', 'remove');
+    }
+
+    _initAlertMessages() {
+        this._message = new BindProxy(new AlertMessage(),
+            new AlertMessageView(document.querySelector('#alertMessage')),
+            'update');
+    }
+
+    _initRemoveConfirmationModal() {
+        let modalDetails = {
+            "id": "modalConfirmRemove",
+            "title": "Remover Fornecedor", 
+            "buttonLabel": "Remover definitivamente"
+        }
+
+        this._modalConfirmRemove = new ConfirmModal("main", modalDetails, id => {this.delete(id)});
+    }
+
+    _initModalFormButtons() {
+        this._modalForm.updateFooter(
+            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
+                new ListenerAction('click', () => {this.saveVendorForm()})));
     }
 
     _createVendor() {

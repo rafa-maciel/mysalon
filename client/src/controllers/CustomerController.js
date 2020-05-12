@@ -13,61 +13,22 @@ import CustomersTable from "../views/CustomersTable";
 import ProxyModelComponent from "../helpers/ProxyModelComponent";
 import ConfirmModal from "../components/ConfirmModal";
 import PageableNavigation from "../components/PageableNavigation";
-import AuthFilterController from "../filters/AuthFilterController";
+import DefaultDashboardController from "./DefaultDashboardController";
 
-export default class CustomerController extends AuthFilterController {
-    constructor() {
-        super();
-        this._service = new CustomerService();
-
-        this._message = new ProxyModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')), 
-            'update');
-
-        this._modalConfirmRemove = new ConfirmModal("main", {
-            "id": "modalConfirmRemove",
-            "title": "Remover Cliente", 
-            "buttonLabel": "Remover definitivamente"
-        }, id => {this.deleteCustomer(id)});
-
-        this._modalForm = new Modal('main', {
-            'id': 'mForm',
-            'title': 'Formulário do Cliente',
-            'footer': true
-        });
-
-        this._customerForm = new CustomerForm(this._modalForm.contentSelector);
-
-        this._customers = new ProxyModelComponent(new ModelList(), 
-            new CustomersTable('#customerList', 
-                id => {this._editCustomer(id)}, 
-                id => {this._confirmRemoveCustomer(id)}),
-            'add', 'remove', 'clean');
-
-        this._filter = new CustomerFilterForm('#customerFilter', new ListenerAction('submit', event => {
-            event.preventDefault();
-            this._filterCustomers()
-        }));
-
-        this._pageable = new PageableNavigation('#customerList', {
-            'id': 'customerListPagination', 
-        });
-
-        this._init();
-    }
+export default class CustomerController extends DefaultDashboardController {
 
     _init() {
+        this._service = new CustomerService();
+
+        this._initAlertMessages();
+        this._initRemoveConfirmationModal();
+        this._initCustomerFormModal();
+        this._initCustomersTable();
         this._filterCustomers();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-customer').addEventListener('click', () => {this._createCustomer()});
 
-    }
-
-    _initModalFormButtons() {
-        this._modalForm.updateFooter(
-            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
-                new ListenerAction('click', () => {this.saveCustomerForm()})));
     }
 
     saveCustomerForm() {
@@ -97,6 +58,53 @@ export default class CustomerController extends AuthFilterController {
             });
 
         this._modalConfirmRemove.hide();
+    }
+
+    _initCustomersTable() {
+        this._customers = new ProxyModelComponent(new ModelList(), 
+            new CustomersTable('#customerList', 
+                id => {this._editCustomer(id)}, 
+                id => {this._confirmRemoveCustomer(id)}),
+            'add', 'remove', 'clean');
+
+        this._filter = new CustomerFilterForm('#customerFilter', new ListenerAction('submit', event => {
+            event.preventDefault();
+            this._filterCustomers()
+        }));
+
+        this._pageable = new PageableNavigation('#customerList', {
+            'id': 'customerListPagination', 
+        });
+    }
+
+    _initCustomerFormModal() {
+        this._modalForm = new Modal('main', {
+            'id': 'mForm',
+            'title': 'Formulário do Cliente',
+            'footer': true
+        });
+
+        this._customerForm = new CustomerForm(this._modalForm.contentSelector);
+    }
+
+    _initRemoveConfirmationModal() {
+        this._modalConfirmRemove = new ConfirmModal("main", {
+            "id": "modalConfirmRemove",
+            "title": "Remover Cliente", 
+            "buttonLabel": "Remover definitivamente"
+        }, id => {this.deleteCustomer(id)});
+    }
+
+    _initAlertMessages() {
+        this._message = new ProxyModelView(new AlertMessage(),
+            new AlertMessageView(document.querySelector('#alertMessage')), 
+            'update');
+    }
+
+    _initModalFormButtons() {
+        this._modalForm.updateFooter(
+            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
+                new ListenerAction('click', () => {this.saveCustomerForm()})));
     }
 
     _filterCustomers() {

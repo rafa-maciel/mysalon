@@ -11,51 +11,22 @@ import ListenerAction from "../components/ListenerAction";
 import ProfessionalsTable from "../views/ProfessionalsTable";
 import ConfirmModal from "../components/ConfirmModal";
 import ProxyModelComponent from "../helpers/ProxyModelComponent";
+import DefaultDashboardController from "./DefaultDashboardController";
 
-export default class ProfessionalController {
-    constructor() {
-        this._professionals = new ProxyModelComponent(new ModelList(),
-            new ProfessionalsTable('#professionalList', 
-                id => {this._editProfessional(id)},
-                id => {this._confirmRemoveProfessional(id)}),
-            'add', 'remove');
-        
-
-        this._message = new ModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')), 
-            'update');
-
-        this._modalForm = new Modal('#modalForm', {
-            'id': 'MForm',
-            'title': 'Formulário do Profissional',
-            'footer': true
-        });
-
-        this._modalConfirmRemove = new ConfirmModal("#modalForm", {
-            "id": "modalConfirmRemove",
-            "title": "Remover Profissional", 
-            "buttonLabel": "Remover definitivamente"
-        }, id => {this.deleteProfessional(id)});
-
-        this._professionalForm = new ProfessionalForm(this._modalForm.contentSelector);
-
-        this._service = new ProfessionalService();
-        this._init();
-    }
-
+export default class ProfessionalController extends DefaultDashboardController {
     _init() {
+        this._service = new ProfessionalService();
+
+        this._initAlertMessages();
+        this._initProfessionalsTable();
+        this._initProfessionalFormModal();
+        this._initRemoveConfirmationModal();
         this._updateProfessionalTable();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-professional').addEventListener('click', () => {
             this._createProfessional();
         });
-    }
-
-    _initModalFormButtons() {
-        this._modalForm.updateFooter(
-            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
-                new ListenerAction('click', () => {this.saveProfessionalForm()})));
     }
 
     saveProfessionalForm() {
@@ -79,6 +50,44 @@ export default class ProfessionalController {
                 this._message.update('Os dados do profissional foram removidos definitivamente',
                     'Profissional removido!', 'info');
             })
+    }
+
+    _initProfessionalsTable() {
+        this._professionals = new ProxyModelComponent(new ModelList(),
+            new ProfessionalsTable('#professionalList', 
+                id => {this._editProfessional(id)},
+                id => {this._confirmRemoveProfessional(id)}),
+            'add', 'remove');
+    }
+
+    _initAlertMessages() {
+        this._message = new ModelView(new AlertMessage(),
+            new AlertMessageView(document.querySelector('#alertMessage')), 
+            'update');
+    }
+    
+    _initProfessionalFormModal() {
+        this._modalForm = new Modal('#modalForm', {
+            'id': 'MForm',
+            'title': 'Formulário do Profissional',
+            'footer': true
+        });
+
+        this._professionalForm = new ProfessionalForm(this._modalForm.contentSelector);
+    }
+
+    _initRemoveConfirmationModal() {
+        this._modalConfirmRemove = new ConfirmModal("#modalForm", {
+            "id": "modalConfirmRemove",
+            "title": "Remover Profissional", 
+            "buttonLabel": "Remover definitivamente"
+        }, id => {this.deleteProfessional(id)});
+    }
+
+    _initModalFormButtons() {
+        this._modalForm.updateFooter(
+            new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
+                new ListenerAction('click', () => {this.saveProfessionalForm()})));
     }
 
     _confirmRemoveProfessional(id) {

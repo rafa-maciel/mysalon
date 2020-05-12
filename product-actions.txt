@@ -1,0 +1,19 @@
+* Customer
+	- Create
+	- Update
+	- Delete
+	- List Pageable
+		- Search for name or|and professional engaged
+
+* Professional
+	- Create
+	- Update
+	- Delete
+	- List (yet not pageable)
+
+* Vendor
+	- Create
+	- Update
+	- Delete
+	- List (yet not pageable)
+	

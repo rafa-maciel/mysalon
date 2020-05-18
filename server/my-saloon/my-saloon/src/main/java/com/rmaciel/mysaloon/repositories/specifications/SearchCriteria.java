@@ -1,28 +1,33 @@
 package com.rmaciel.mysaloon.repositories.specifications;
 
-public class SearchCriteria {
-    private String key;
+public class SearchCriteria<T> {
     private SearchOperation operation;
-    private Object value;
+    private T value;
+    private T valueMax;
     
 
-    public SearchCriteria(String key, SearchOperation operation, Object value) {
-        this.key = key;
+    public SearchCriteria(SearchOperation operation, T value) {
         this.operation = operation;
         this.value = value;
     }
-   
 
-    public String getKey() {
-        return this.key;
+
+    public SearchCriteria(SearchOperation operation, T value, T valueMax) {
+        this.operation = operation;
+        this.value = value;
+        this.valueMax = valueMax;
     }
 
     public SearchOperation getOperation() {
         return this.operation;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return this.value;
+    }
+
+    public T getValueMax() {
+        return valueMax;
     }
     
 }

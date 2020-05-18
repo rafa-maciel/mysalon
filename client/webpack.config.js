@@ -14,6 +14,7 @@ module.exports = {
     customer: './src/customer.js',
     vendor: './src/vendor.js',
     authentication: './src/authentication.js',
+    purchase: './src/purchase.js',
   },
   output: {
     filename: '[name].bundle.js',

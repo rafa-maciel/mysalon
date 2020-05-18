@@ -1,15 +1,18 @@
 package com.rmaciel.mysaloon.controllers.dtos;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rmaciel.mysaloon.models.PaymentMethod;
 import com.rmaciel.mysaloon.models.Purchase;
 
 public class PurchaseDTO {
     private Long id;
     private BigDecimal value;
-    private Date date;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Calendar date;
     private String notes;
     private PaymentMethod paymentMethod;
     private String vendorName;
@@ -32,7 +35,7 @@ public class PurchaseDTO {
         return this.value;
     }
     
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 

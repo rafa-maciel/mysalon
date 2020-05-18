@@ -1,49 +1,51 @@
 package com.rmaciel.mysaloon.controllers.forms;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 
 import com.rmaciel.mysaloon.models.PaymentMethod;
 import com.rmaciel.mysaloon.models.Purchase;
 import com.rmaciel.mysaloon.repositories.specifications.SearchOperation;
-import com.rmaciel.mysaloon.repositories.specifications.PurchaseSpecificationBuilder;
+import com.rmaciel.mysaloon.repositories.specifications.PurchaseSpecification;
+import com.rmaciel.mysaloon.repositories.specifications.SearchCriteria;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class PurchaseSearchForm {
     private BigDecimal value;
+    private BigDecimal valueMax;
     private SearchOperation valueOperation;
-    private Date date;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd")
+    private Calendar date;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd")
+    private Calendar dateMax;
     private SearchOperation dateOperation;
+
     private PaymentMethod paymentMethod;
 
-    public PurchaseSearchForm(BigDecimal value, SearchOperation valueOperation, Date date,
-            SearchOperation dateOperation, PaymentMethod paymentMethod) {
+    private Long vendorId;
+
+    public PurchaseSearchForm(BigDecimal value, BigDecimal valueMax, SearchOperation valueOperation, Calendar date,
+        Calendar dateMax, SearchOperation dateOperation, PaymentMethod paymentMethod, Long vendorId) {
         this.value = value;
+        this.valueMax = valueMax;
         this.valueOperation = valueOperation;
         this.date = date;
+        this.dateMax = dateMax;
         this.dateOperation = dateOperation;
         this.paymentMethod = paymentMethod;
+        this.vendorId = vendorId;
     }
 
     public Specification<Purchase> buildSpecification() {
-        PurchaseSpecificationBuilder builder = new PurchaseSpecificationBuilder();
+        return PurchaseSpecification.getByValue(new SearchCriteria<BigDecimal>(valueOperation, value, valueMax))
+            .and(PurchaseSpecification.getByDate(new SearchCriteria<Calendar>(dateOperation, date, dateMax)))
+            .and(PurchaseSpecification.getByPaymentMethod(new SearchCriteria<PaymentMethod>(SearchOperation.EQUAL, paymentMethod)))
+            .and(PurchaseSpecification.getByVendor(new SearchCriteria<Long>(SearchOperation.EQUAL, vendorId)));
 
-        if (value != null) {
-            valueOperation = valueOperation != null ? valueOperation : SearchOperation.EQUAL;
-            builder.with("value", valueOperation, value);
-        }
-
-        if (date != null) {
-            dateOperation = dateOperation != null ? dateOperation : SearchOperation.EQUAL;
-            builder.with("date", dateOperation, date);
-        }
-
-        if (paymentMethod != null) {
-            builder.with("paymentMethod", SearchOperation.EQUAL, paymentMethod);
-        }
-
-        return builder.build();
     }
 
 
@@ -55,7 +57,7 @@ public class PurchaseSearchForm {
         return this.valueOperation;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return this.date;
     }
 
@@ -66,6 +68,19 @@ public class PurchaseSearchForm {
     public PaymentMethod getPaymentMethod() {
         return this.paymentMethod;
     }
+
+    public BigDecimal getValueMax() {
+        return this.valueMax;
+    }
+
+    public Calendar getDateMax() {
+        return this.dateMax;
+    }
+
+    public Long getVendorId() {
+        return this.vendorId;
+    }
+    
 
     
 }

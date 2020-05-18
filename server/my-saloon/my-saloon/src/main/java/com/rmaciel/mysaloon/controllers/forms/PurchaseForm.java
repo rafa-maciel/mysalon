@@ -1,7 +1,7 @@
 package com.rmaciel.mysaloon.controllers.forms;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Optional;
 
 import javax.validation.constraints.NotEmpty;
@@ -19,7 +19,7 @@ public class PurchaseForm {
     @NotNull @NotEmpty
     private String notes;
 
-    private Date date;
+    private Calendar date;
 
     @NotNull
     private PaymentMethod paymentMethod;
@@ -28,7 +28,7 @@ public class PurchaseForm {
     private Long vendorId;
 
 
-    public PurchaseForm(BigDecimal value, Date date, String notes, PaymentMethod paymentMethod, Long vendorId) {
+    public PurchaseForm(BigDecimal value, Calendar date, String notes, PaymentMethod paymentMethod, Long vendorId) {
         this.value = value;
         this.date = date;
         this.notes = notes;
@@ -57,7 +57,7 @@ public class PurchaseForm {
         return this.value;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 

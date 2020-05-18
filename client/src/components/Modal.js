@@ -27,6 +27,10 @@ export default class Modal extends Component{
         document.querySelector(`${this._tag} .modal-body`).appendChild(content);
     }
 
+    updateContentText(content) {
+        document.querySelector(`${this._tag} .modal-body`).innerHTML = '<pre>' + content + '</pre>';
+    }
+
     updateFooter(footer) {
         document.querySelector(`${this._tag} .modal-footer`).innerHTML = '';
         document.querySelector(`${this._tag} .modal-footer`).appendChild(footer);

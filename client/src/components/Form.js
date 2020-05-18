@@ -33,6 +33,10 @@ export default class Form extends Component{
         return data;
     }
 
+    getDataAsParams() {
+        return $(this._tag).serialize();
+    }
+
     _init() {
         super._init();
 

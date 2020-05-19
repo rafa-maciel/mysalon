@@ -1,5 +1,5 @@
 export default class Pageable{
-    constructor(pageNumber, pageSize, totalElements, totalPages, numberOfElements, first, last, number, size, empty) {
+    constructor(pageNumber, pageSize, totalElements, totalPages, numberOfElements, first, last, number, size, empty, content=[]) {
         this._pageNumber = pageNumber;
         this._pageSize = pageSize;
         this._totalElements = totalElements;
@@ -10,6 +10,14 @@ export default class Pageable{
         this._number = number;
         this._size = size;
         this._empty = empty;
+        this._content = content;
+    }
+
+    static buildFrom(dataArray, content) {
+        let pgdetails = dataArray['pageable']
+        return new Pageable(pgdetails['pageNumber'], pgdetails['pageSize'], dataArray['totalElements'], 
+            dataArray['totalPages'], dataArray['numberOfElements'], dataArray['first'], dataArray['last'], 
+            dataArray['number'], dataArray['size'], dataArray['empty'], content);
     }
 
     get pageNumber() {
@@ -43,7 +51,27 @@ export default class Pageable{
     get empty() {
         return this._empty;
     }
-    
+
+    get content() {
+        return this._content;
+    }
+
+    get previous() {
+        return this.number - 1;
+    }
+
+    get next() {
+        return this.number + 1;
+    }
+
+    get hasNext() {
+        return this._number < (this._totalPages -1);
+    }
+
+    get hasPrevious() {
+        return this._number > 0;
+    }
+
     get paged() {
         return this._totalPages > 1;
     }

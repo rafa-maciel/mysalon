@@ -7,7 +7,6 @@ import ModelList from "../models/ModelList";
 import PurchaseTable from "../views/PurchasesTable";
 import PurchaseService from "../services/PurchaseService";
 import PurchaseSearchForm from "../views/PurchaseSearchForm";
-import CollapsePanel from "../components/CollapsePanel";
 import Modal from "../components/Modal";
 import ListenerAction from "../components/ListenerAction";
 import PurchaseForm from "../views/PurchaseForm";
@@ -15,6 +14,7 @@ import Button from "../components/Button";
 import Purchase from "../models/Purchase";
 import ConfirmModal from "../components/ConfirmModal";
 import DateFormatHelper from "../helpers/DateFormatHelper";
+import PageableNavigation from "../components/PageableNavigation";
 
 export default class PurchaseController extends DefaultDashboardController {
 
@@ -42,6 +42,8 @@ export default class PurchaseController extends DefaultDashboardController {
                 notes => {this._showNotes(notes)}),
             'add', 'remove', 'clean');
         
+        this._tableNav = new PageableNavigation("#purchaseList", {'id': 'tableNav'}, page => this.searchPurchases(page));
+
         this._searchModal = new Modal("#searchPanel", {
             'id': 'searchModal',
             'title': 'Filtro de Pesquisa',
@@ -65,13 +67,15 @@ export default class PurchaseController extends DefaultDashboardController {
         this.searchPurchases();
     }
 
-    searchPurchases() {
+    searchPurchases(page=null) {
         let searchData = this._purchasesSearchForm.getDataAsParams();
+        if (page != null) searchData = searchData + '&page=' + page;
         
         this._purchases.clean();        
-        this._service.getPurchases(searchData)
-            .then(purchases => {
-                purchases.forEach(purchase => this._purchases.add(purchase));
+        this._service.getPageablePurchases(searchData)
+            .then(pageable => {
+                pageable.content.forEach(purchase => this._purchases.add(purchase));
+                this._tableNav.update(pageable);
             });
 
 

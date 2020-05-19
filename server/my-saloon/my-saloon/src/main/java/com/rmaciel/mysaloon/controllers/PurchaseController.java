@@ -1,9 +1,6 @@
 package com.rmaciel.mysaloon.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +12,8 @@ import com.rmaciel.mysaloon.repositories.PurchaseRepository;
 import com.rmaciel.mysaloon.repositories.VendorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,17 +70,11 @@ public class PurchaseController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PurchaseDTO>> search(PurchaseSearchForm form) {
-        List<Purchase> purchases = new ArrayList<>();
+    public ResponseEntity<Page<PurchaseDTO>> search(PurchaseSearchForm form, Pageable pageable) {
+        Specification<Purchase> spec = form.buildSpecification();
+        Page<Purchase> purchases = repository.findAll(spec, pageable);
 
-        Specification<Purchase> spec = form != null ? form.buildSpecification() : null;
-        if (spec == null) {
-            purchases = repository.findAll();
-        } else {
-            purchases = repository.findAll(spec);
-        }
-
-        return ResponseEntity.ok(purchases.stream().map(PurchaseDTO::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(purchases.map(PurchaseDTO::new));
     }
 
     @DeleteMapping("/{id}")

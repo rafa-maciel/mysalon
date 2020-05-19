@@ -76,6 +76,29 @@ export default class PurchaseSearchForm extends Form {
                         `).join('')}
                     </select>
                 </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="size">Itens por Pagina</label>
+                        <select name="size" class="form-control">
+                            <option value="20">20</option>
+                            <option value="10">10</option>
+                            <option value="5">5</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="sort">Ordenar Por:</label>
+                        <select name="sort" class="form-control">
+                            <option value="">Sem Ordenação</option>
+                            <option value="value,ASC">Valor (crescente)</option>
+                            <option value="value,DESC">Valor (Decrescente)</option>
+                            <option value="date,ASC">Data (Crescente)</option>
+                            <option value="date,DESC">Data (Decrescente)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         `
 

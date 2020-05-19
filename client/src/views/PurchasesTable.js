@@ -7,7 +7,7 @@ export default class PurchaseTable extends ModelTable {
     constructor(parentSelector, editAction, removeAction, showNotes) {
         super(parentSelector, {
             'id': 'purchasesTable',
-            'headers': ['Data', 'Valor', 'Metodo De Pagamento', 'Fornecedor', 'Ações']
+            'headers': ['Data', 'Valor', 'Metodo De Pagamento', 'Fornecedor', 'Ações'],
         });
 
         this._editAction = editAction;

@@ -1,5 +1,6 @@
 import HttpHelper from "../helpers/HttpHelper";
 import Purchase from "../models/Purchase";
+import Pageable from "../models/Pageable";
 
 export default class PurchaseService {
     constructor() {
@@ -7,13 +8,14 @@ export default class PurchaseService {
         this._http = new HttpHelper();
     }
 
-    getPurchases(searchData=null) {
+    getPageablePurchases(searchData=null) {
         let endpoint = this._serverUrl + '/search';
         if (searchData != null) 
             endpoint = endpoint + '?' + searchData;
         return this._http.get(endpoint)
             .then(dataArray => 
-                dataArray.map(data => this._getPurchaseFromData(data)));
+                Pageable.buildFrom(dataArray, 
+                    dataArray['content'].map(data => this._getPurchaseFromData(data))));
     }
 
     updatePurchase(purchaseDTO) {

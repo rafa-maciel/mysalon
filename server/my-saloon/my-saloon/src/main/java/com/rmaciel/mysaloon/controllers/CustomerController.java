@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import com.rmaciel.mysaloon.controllers.dtos.CustomerDTO;
 import com.rmaciel.mysaloon.controllers.forms.CustomerForm;
+import com.rmaciel.mysaloon.controllers.forms.CustomerSearchForm;
 import com.rmaciel.mysaloon.models.Customer;
 import com.rmaciel.mysaloon.repositories.CustomerRepository;
 import com.rmaciel.mysaloon.repositories.ProfessionalRepository;
@@ -16,6 +17,7 @@ import com.rmaciel.mysaloon.repositories.ProfessionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "http://localhost:9000")
@@ -92,12 +93,10 @@ public class CustomerController {
         return ResponseEntity.ok(customers);
     }
     
-    @GetMapping
-    public Page<CustomerDTO> findByNameAndProfessionalEngaged(@RequestParam(required = false, defaultValue = "") String name, 
-                                                            @RequestParam(required = false, defaultValue = "") String professionalEngagedName, 
-                                                            Pageable pageable)  {                                                
-
-        Page<Customer> page = repository.findByFullnameContainingAndProfessionalEngagedNameContaining(name, professionalEngagedName, pageable);
+    @GetMapping("/search")
+    public Page<CustomerDTO> search(CustomerSearchForm form, Pageable pageable)  {                                                
+        Specification<Customer> specs = form.buildSpecification();
+        Page<Customer> page = repository.findAll(specs, pageable);
         
         return page.map(CustomerDTO::new);
     }

@@ -67,14 +67,25 @@ export default class CustomerController extends DefaultDashboardController {
                 id => {this._confirmRemoveCustomer(id)}),
             'add', 'remove', 'clean');
 
-        this._filter = new CustomerFilterForm('#customerFilter', new ListenerAction('submit', event => {
+        this._modalSearchForm = new Modal('main', {
+            'id': 'modalSearchForm',
+            'title': 'Filtro de pesquisa'
+        });
+
+        this._filter = new CustomerFilterForm(this._modalSearchForm.contentSelector, 
+            new ListenerAction('submit', event => {
             event.preventDefault();
             this._filterCustomers()
+            this._modalSearchForm.hide();
         }));
+
+        document.querySelector('.btn-show-search-modal')
+            .addEventListener('click', () => {this._modalSearchForm.show()});
+
 
         this._pageable = new PageableNavigation('#customerList', {
             'id': 'customerListPagination', 
-        });
+        }, page => {this._filterCustomers(page)});
     }
 
     _initCustomerFormModal() {
@@ -107,14 +118,16 @@ export default class CustomerController extends DefaultDashboardController {
                 new ListenerAction('click', () => {this.saveCustomerForm()})));
     }
 
-    _filterCustomers() {
+    _filterCustomers(page=null) {
         this._customers.clean();
 
-        let dataFilter = this._filter.getData();
-        this._service.getCustomers(dataFilter)
-            .then(pageableContent => {
-                this._pageable.update(pageableContent['pageable']);
-                pageableContent['customers'].forEach(customer => {
+        let parameters = this._filter.getDataAsParams();
+        if (page != null) parameters = parameters + '&page=' + page;
+        
+        this._service.getCustomers(parameters)
+            .then(pageable => {
+                this._pageable.update(pageable);
+                pageable.content.forEach(customer => {
                     this._customers.add(customer);
                 });
                 this._message.update('',

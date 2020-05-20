@@ -8,19 +8,17 @@ export default class CustomerService {
         this._http = new HttpHelper();
     }
 
-    getCustomers(dataFilter) {
-        let endpoint = this._serverURL;
-        let parameters = this._getFilterData(dataFilter);
+    getCustomers(parameters=null) {
+        let endpoint = this._serverURL + "/search";
+
         if (parameters)
             endpoint = endpoint + "?" + parameters;
 
         return this._http.get(endpoint)
-            .then(pageableContent => {
-                return {
-                    'pageable': this._getPageableCustomersFromData(pageableContent),
-                    'customers': pageableContent['content'].map(data => this._getCustomerFromData(data))
-                }
-            })
+            .then(pageable => 
+                Pageable.buildFrom(pageable, 
+                    pageable['content'].map(data => 
+                        this._getCustomerFromData(data))))
             .catch(error => {
                 console.log(error);
                 throw new Error('Não foi possivel conectar ao servidor');

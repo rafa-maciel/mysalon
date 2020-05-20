@@ -5,6 +5,10 @@ public class SearchCriteria<T> {
     private T value;
     private T valueMax;
     
+    public SearchCriteria(T value) {
+        this.operation = SearchOperation.EQUAL;
+        this.value = value;
+    }
 
     public SearchCriteria(SearchOperation operation, T value) {
         this.operation = operation;

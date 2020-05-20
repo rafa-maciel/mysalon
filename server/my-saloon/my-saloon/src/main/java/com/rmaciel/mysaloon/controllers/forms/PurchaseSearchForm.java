@@ -43,8 +43,8 @@ public class PurchaseSearchForm {
     public Specification<Purchase> buildSpecification() {
         return PurchaseSpecification.getByValue(new SearchCriteria<BigDecimal>(valueOperation, value, valueMax))
             .and(PurchaseSpecification.getByDate(new SearchCriteria<Calendar>(dateOperation, date, dateMax)))
-            .and(PurchaseSpecification.getByPaymentMethod(new SearchCriteria<PaymentMethod>(SearchOperation.EQUAL, paymentMethod)))
-            .and(PurchaseSpecification.getByVendor(new SearchCriteria<Long>(SearchOperation.EQUAL, vendorId)));
+            .and(PurchaseSpecification.getByPaymentMethod(new SearchCriteria<PaymentMethod>(paymentMethod)))
+            .and(PurchaseSpecification.getByVendor(new SearchCriteria<Long>(vendorId)));
 
     }
 

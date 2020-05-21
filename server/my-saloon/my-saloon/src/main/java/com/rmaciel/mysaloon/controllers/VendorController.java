@@ -13,6 +13,7 @@ import com.rmaciel.mysaloon.models.Vendor;
 import com.rmaciel.mysaloon.repositories.VendorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -53,6 +54,7 @@ public class VendorController {
 
     @PutMapping("/{id}")
     @Transactional
+    @CacheEvict(value = "allVendors", allEntries = true)
     public ResponseEntity<VendorDTO> update(@PathVariable Long id, @RequestBody VendorForm form) {
         Optional<Vendor> optional = repository.findById(id); 
         if (!optional.isPresent())

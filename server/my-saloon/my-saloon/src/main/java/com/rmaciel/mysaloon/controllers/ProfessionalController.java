@@ -15,7 +15,6 @@ import com.rmaciel.mysaloon.services.UserAccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,7 +40,6 @@ public class ProfessionalController {
 
     @PostMapping
     @Transactional
-    @CacheEvict(value = "allProfessionals", allEntries = true)
     public ResponseEntity<ProfessionalDTO> create(@Valid @RequestBody ProfessionalForm form) {
         Professional professional = form.convert();
         professional = repository.save(professional);
@@ -55,7 +53,6 @@ public class ProfessionalController {
     }
 
     @GetMapping("/{id}")
-    @Cacheable("getProfessional")
     public ResponseEntity<ProfessionalDTO> read(@PathVariable Long id) {
         Professional professional = this.findOrNull(id);
         if (professional == null)
@@ -78,7 +75,6 @@ public class ProfessionalController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    @CacheEvict(value = {"allProfessionals", "getProfessional"}, allEntries = true)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Professional professional = this.findOrNull(id);
         if (professional == null)
@@ -89,7 +85,6 @@ public class ProfessionalController {
     }
 
     @GetMapping
-    @Cacheable("allProfessionals")
     public ResponseEntity<List<ProfessionalDTO>> listAll() {
         List<ProfessionalDTO> professionals = new ArrayList<>();
         repository.findAll().forEach(professional -> {

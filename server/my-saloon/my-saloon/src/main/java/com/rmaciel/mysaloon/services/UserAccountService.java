@@ -30,6 +30,7 @@ public class UserAccountService {
 
     private void sendNewPasswordEmail(UserAccount user, String name, String generatedPassoword) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("rafael.macielf@gmail.com");
         message.setTo(user.getEmail());
         message.setSubject("MySaloon - Sua conta foi criada");
         message.setText("Sua conta foi criada no sistema MySaloon, senha gerada: " + generatedPassoword);

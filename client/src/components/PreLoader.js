@@ -17,6 +17,11 @@ export default class PreLoader extends Component {
         this._component.classList.remove('pre-loader-running');
     }
 
+    run(promisse) {
+        this.start();
+        promisse.then(() => {this.stop()});
+    }
+
     _initLoaderComponent() {
         let template = `
         <div class="loader-panel">

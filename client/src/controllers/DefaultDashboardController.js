@@ -8,8 +8,7 @@ import PreLoader from '../components/PreLoader';
 export default class DefaultDashboardController {
     constructor() {
         this._preLoader = new PreLoader();
-        this._preLoader.start();
-
+        
         this._authService = new AuthenticationTokenService();
         this._validAuthenticatedClient();
 
@@ -20,9 +19,6 @@ export default class DefaultDashboardController {
         this._dashboardNav = new DashboardNavigation('#dashboardNavigation');
 
         this._init();
-
-        window.setTimeout(() => {this._preLoader.stop()}, 1000);
-
     }
 
     doLogoff() {

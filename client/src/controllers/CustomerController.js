@@ -24,7 +24,7 @@ export default class CustomerController extends DefaultDashboardController {
         this._initRemoveConfirmationModal();
         this._initCustomerFormModal();
         this._initCustomersTable();
-        this._filterCustomers();
+        this.searchCustomers();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-customer').addEventListener('click', () => {this._createCustomer()});
@@ -35,29 +35,57 @@ export default class CustomerController extends DefaultDashboardController {
         let dto = this._customerForm.getCustomerDTO();
         let savePromisse = dto.id ? this._service.updateCustomer(dto) : this._service.createCustomer(dto);
 
-        savePromisse.then(customer => {
-            this._customers.add(customer);
-            this._message.update(`Os dados do ${customer.fullname} foram salvos com sucesso`,
-                `Dados Salvo`, 
-                'success');
+        this._preLoader.run(
+            savePromisse.then(customer => {
+                this._customers.add(customer);
+                this._message.update(`Os dados do ${customer.fullname} foram salvos com sucesso`,
+                    `Dados Salvo`, 
+                    'success');
 
-                this._modalForm.hide();
-        }).catch(error => console.log(error));
+                    this._modalForm.hide();
+            }).catch(error => console.log(error))
+        );
     }
 
     deleteCustomer(id) {
-        this._service.deleteCustomer(id)
-            .then(() => {
-                this._customers.remove(id);
-                this._message.update('Os dados do cliente foram removidos definitivamente',
-                'Cliente removido!', 'info');
-            
-            }).catch(error => {
-                this._message.update(error.message,
-                    'Erro na operação!', 'warning');
-            });
+        this._preLoader.run(
+            this._service.deleteCustomer(id)
+                .then(() => {
+                    this._customers.remove(id);
+                    this._message.update('Os dados do cliente foram removidos definitivamente',
+                    'Cliente removido!', 'info');
+                
+                }).catch(error => {
+                    this._message.update(error.message,
+                        'Erro na operação!', 'warning');
+                })
+        );
 
         this._modalConfirmRemove.hide();
+    }
+
+    searchCustomers(page=null) {
+        this._customers.clean();
+
+        let parameters = this._filter.getDataAsParams();
+        if (page != null) parameters = parameters + '&page=' + page;
+        this._preLoader.run(
+            this._service.getCustomers(parameters)
+                .then(pageable => {
+                    this._pageable.update(pageable);
+                    pageable.content.forEach(customer => {
+                        this._customers.add(customer);
+                    });
+                    this._message.update('',
+                        'Lista de Clientes atualizada!', 
+                        'info');
+                })
+                .catch(error => {
+                    this._message.update(error.message,
+                        'A conexão falhou',
+                        'info');
+                })
+        )
     }
 
     _initCustomersTable() {
@@ -75,7 +103,7 @@ export default class CustomerController extends DefaultDashboardController {
         this._filter = new CustomerFilterForm(this._modalSearchForm.contentSelector, 
             new ListenerAction('submit', event => {
             event.preventDefault();
-            this._filterCustomers()
+            this.searchCustomers()
             this._modalSearchForm.hide();
         }));
 
@@ -85,7 +113,7 @@ export default class CustomerController extends DefaultDashboardController {
 
         this._pageable = new PageableNavigation('#customerList', {
             'id': 'customerListPagination', 
-        }, page => {this._filterCustomers(page)});
+        }, page => {this.searchCustomers(page)});
     }
 
     _initCustomerFormModal() {
@@ -116,29 +144,6 @@ export default class CustomerController extends DefaultDashboardController {
         this._modalForm.updateFooter(
             new Button('Salvar', 'btn btn-primary btn-lg', 'button', 
                 new ListenerAction('click', () => {this.saveCustomerForm()})));
-    }
-
-    _filterCustomers(page=null) {
-        this._customers.clean();
-
-        let parameters = this._filter.getDataAsParams();
-        if (page != null) parameters = parameters + '&page=' + page;
-        
-        this._service.getCustomers(parameters)
-            .then(pageable => {
-                this._pageable.update(pageable);
-                pageable.content.forEach(customer => {
-                    this._customers.add(customer);
-                });
-                this._message.update('',
-                    'Lista de Clientes atualizada!', 
-                    'info');
-            })
-            .catch(error => {
-                this._message.update(error.message,
-                    'A conexão falhou',
-                    'info');
-            });
     }
 
     _createCustomer() {

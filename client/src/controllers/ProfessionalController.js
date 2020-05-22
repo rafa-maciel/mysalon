@@ -21,7 +21,7 @@ export default class ProfessionalController extends DefaultDashboardController {
         this._initProfessionalsTable();
         this._initProfessionalFormModal();
         this._initRemoveConfirmationModal();
-        this._updateProfessionalTable();
+        this.updateProfessionalTable();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-professional').addEventListener('click', () => {
@@ -33,25 +33,35 @@ export default class ProfessionalController extends DefaultDashboardController {
         let dto = this._professionalForm.professional;
         let savePromisse = dto.id ? this._service.updateProfessional(dto) : this._service.createProfessional(dto);
 
-        this._preLoader.start();
-        savePromisse.then(professional => {
+        this._preLoader.run(savePromisse.then(professional => {
             this._professionals.add(professional);
             this._modalForm.hide();
             this._message.update('',
                 `Os dados do(a) ${professional.name} foram salvos com sucesso`, 
                 'success');
-            this._preLoader.stop();
-        });
+        }));
+    }
+
+    updateProfessionalTable() {
+        this._preLoader.run(
+            this._service.getAllProfessionals()
+            .then(professionalsList => {
+                professionalsList.forEach(professional => this._professionals.add(professional))
+                this._message.update('A lista de profissionais foi sincronizada com o servidor',
+                    'Lista de Profissionais atualizada!', 
+                    'info');
+            })
+        );
     }
    
     deleteProfessional(id) {
-        this._service.deteleProfessional(id)
+        this._preLoader.run(this._service.deteleProfessional(id)
             .then(() => {
                 this._modalConfirmRemove.hide();
                 this._professionals.remove(id);
                 this._message.update('Os dados do profissional foram removidos definitivamente',
                     'Profissional removido!', 'info');
-            })
+            }));
     }
 
     _initProfessionalsTable() {
@@ -110,13 +120,6 @@ export default class ProfessionalController extends DefaultDashboardController {
         this._modalForm.show();
     }
 
-    _updateProfessionalTable() {
-        this._service.getAllProfessionals()
-            .then(professionalsList => professionalsList.forEach(professional => this._professionals.add(professional)));
-        
-        this._message.update('A lista de profissionais foi sincronizada com o servidor',
-            'Lista de Profissionais atualizada!', 
-            'info');
-    }
+    
 
 }

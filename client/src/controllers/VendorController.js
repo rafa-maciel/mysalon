@@ -22,7 +22,6 @@ export default class VendorController extends DefaultDashboardController {
         this._initAlertMessages();
         this._initVendorFormModal();
         this._initRemoveConfirmationModal();
-        this._updateVendorsList();
         this._initModalFormButtons();
 
         document.querySelector('.btn-create-vendor').addEventListener('click', () => {this._createVendor()});
@@ -32,26 +31,42 @@ export default class VendorController extends DefaultDashboardController {
         let dto = this._vendorForm.getVendorDTO();
         let savePromisse = dto.id ? this._service.update(dto) : this._service.create(dto);
         
-        savePromisse.then(vendor => {
-            this._vendors.add(vendor);
-            this._message.update(``,
-                    `Os dados do fornecedors foram salvos com sucesso.`,
-                    'success');
-            this._modalForm.hide();
-        });
+        this._preLoader.run(
+            savePromisse.then(vendor => {
+                this._vendors.add(vendor);
+                this._message.update(``,
+                        `Os dados do fornecedors foram salvos com sucesso.`,
+                        'success');
+                this._modalForm.hide();
+            })
+        );
     }
 
     delete(id) {
-        this._service.delete(id)
-            .then(() => {
-                this._vendors.remove(id);
-                this._message.update('', 'O fornecedor foi removido', 'info');
-                
-            }).catch(error => {
-                this._message.update(error.message, 'A operação falhou', 'warning');
-            });
+        this._preLoader.run(
+            this._service.delete(id)
+                .then(() => {
+                    this._vendors.remove(id);
+                    this._message.update('', 'O fornecedor foi removido', 'info');
+                    
+                }).catch(error => {
+                    this._message.update(error.message, 'A operação falhou', 'warning');
+                })
+        );
         
         this._modalConfirmRemove.hide();
+    }
+
+    searchVendors() {
+        this._preLoader.run(
+            this._service.getAll()
+                .then(vendors => {
+                    vendors.forEach(vendor => this._vendors.add(vendor))
+                    this._message.update('', 'Lista de fornecedores atualizada!', 'info');
+                }).catch(error => {
+                    this._message.update('Erro ao conectar ao servidor', error.message, 'warning');
+                })
+        );
     }
 
     _initVendorFormModal() {
@@ -70,6 +85,8 @@ export default class VendorController extends DefaultDashboardController {
                 id => {this._editVendor(id)}, 
                 id => {this._confirmRemoveVendor(id)}), 
             'add', 'remove');
+
+        this.searchVendors();
     }
 
     _initAlertMessages() {
@@ -111,15 +128,5 @@ export default class VendorController extends DefaultDashboardController {
             `Você tem certeza que deseja remover definitivamente o(a) professional <strong>${vendor.name}</strong> do sistema?`, 
             vendor.id);
         this._modalConfirmRemove.show();
-    }
-
-    _updateVendorsList() {
-        this._service.getAll()
-            .then(vendors => {
-                vendors.forEach(vendor => this._vendors.add(vendor))
-                this._message.update('', 'Lista de fornecedores atualizada!', 'info');
-            }).catch(error => {
-                this._message.update('Erro ao conectar ao servidor', error.message, 'warning');
-            });
     }
 }

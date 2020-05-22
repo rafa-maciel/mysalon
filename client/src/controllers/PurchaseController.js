@@ -28,6 +28,50 @@ export default class PurchaseController extends DefaultDashboardController {
         
     }
 
+    savePurchaseForm() {
+        let purchaseDTO = this._purchaseForm.purchase;
+        let savePromisse = purchaseDTO.id ?
+            this._service.updatePurchase(purchaseDTO) :
+            this._service.createPurchase(purchaseDTO);
+
+        this._preLoader.run(
+            savePromisse.then(purchase => {
+                this._purchases.add(purchase);
+                this._modalForm.hide();
+                this._message.update('', 'Os dados da compra foram salvos com sucesso', 'success');
+            })
+        );
+    }
+
+    deletePurchase(id) {
+        this._preLoader.run(
+            this._service.deletePurchase(id)
+                .then(() => {
+                    this._modalRemoveConfirmation.hide();
+                    this._purchases.remove(id);
+                    this._message.update('', 'Compra removida com sucesso', 'success');
+                })
+        );
+    }
+
+    searchPurchases(page=null) {
+        let searchData = this._purchasesSearchForm.getDataAsParams();
+        if (page != null) searchData = searchData + '&page=' + page;
+        
+        this._purchases.clean();        
+        this._preLoader.run(
+            this._service.getPageablePurchases(searchData)
+                .then(pageable => {
+                    pageable.content.forEach(purchase => this._purchases.add(purchase));
+                    this._tableNav.update(pageable);
+                    this._message.update('A lista de compras está atualizar com o servidor',
+                        'Lista atualizada de compras', 'info');
+                })
+        );
+
+
+    }
+
     _initAlertMessages() {
         this._message = new BindProxyModelView(new AlertMessage(),
             new AlertMessageView(document.querySelector('#alertMessage')),
@@ -65,44 +109,6 @@ export default class PurchaseController extends DefaultDashboardController {
             .addEventListener('click', () => {this._searchModal.show()});
 
         this.searchPurchases();
-    }
-
-    searchPurchases(page=null) {
-        let searchData = this._purchasesSearchForm.getDataAsParams();
-        if (page != null) searchData = searchData + '&page=' + page;
-        
-        this._purchases.clean();        
-        this._service.getPageablePurchases(searchData)
-            .then(pageable => {
-                pageable.content.forEach(purchase => this._purchases.add(purchase));
-                this._tableNav.update(pageable);
-            });
-
-
-        this._message.update('A lista de compras está atualizar com o servidor',
-            'Lista atualizada de compras', 'info');
-    }
-
-    savePurchaseForm() {
-        let purchaseDTO = this._purchaseForm.purchase;
-        let savePromisse = purchaseDTO.id ?
-            this._service.updatePurchase(purchaseDTO) :
-            this._service.createPurchase(purchaseDTO);
-
-        savePromisse.then(purchase => {
-            this._purchases.add(purchase);
-            this._modalForm.hide();
-            this._message.update('', 'Os dados da compra foram salvos com sucesso', 'success');
-        });
-    }
-
-    deletePurchase(id) {
-        this._service.deletePurchase(id)
-            .then(() => {
-                this._modalRemoveConfirmation.hide();
-                this._purchases.remove(id);
-                this._message.update('', 'Compra removida com sucesso', 'success');
-            });
     }
 
     _initPurchaseFormModal() {

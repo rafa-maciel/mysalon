@@ -23,7 +23,7 @@ public class UserAccountService {
     public void create(Professional professional, String email, AccountRole role) {
         String generatedPassoword = StringGenerator.secure(12);
 
-        UserAccount user = new UserAccount(professional, email, generatedPassoword, role);
+        UserAccount user = new UserAccount(professional, email, generatedPassoword, role != null ? role : AccountRole.ADMIN);
         repository.save(user);
         sendNewPasswordEmail(user, professional.getName(), generatedPassoword);
     }

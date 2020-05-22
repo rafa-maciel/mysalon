@@ -33,12 +33,14 @@ export default class ProfessionalController extends DefaultDashboardController {
         let dto = this._professionalForm.professional;
         let savePromisse = dto.id ? this._service.updateProfessional(dto) : this._service.createProfessional(dto);
 
+        this._preLoader.start();
         savePromisse.then(professional => {
             this._professionals.add(professional);
             this._modalForm.hide();
             this._message.update('',
                 `Os dados do(a) ${professional.name} foram salvos com sucesso`, 
                 'success');
+            this._preLoader.stop();
         });
     }
    

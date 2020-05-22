@@ -1,13 +1,14 @@
 import Model from "./Model";
 
 export default class Professional extends Model{
-    constructor(name, residencialPhone, cellphone, departament, id='') {
+    constructor(name, residencialPhone, cellphone, departament, email, id='') {
         super();
         this._name = name;
         this._residencialPhone = residencialPhone;
         this._cellphone = cellphone;
         this._departament = departament;
         this._id = id;
+        this._email = email;
     }
 
     equals(other) {
@@ -32,6 +33,10 @@ export default class Professional extends Model{
 
     get departament() {
         return this._departament;
+    }
+
+    get email() {
+        return this._email;
     }
 
     get id() {

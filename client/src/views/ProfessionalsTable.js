@@ -6,7 +6,7 @@ export default class ProfessionalsTable extends ModelTable {
     constructor(parentSelector, editAction, removeAction) {
         super(parentSelector, {
             'id': 'professionalsList',
-            'headers': ['Nome', 'Àrea de Atuação', 'Telefone', 'Celular', 'Ações'],
+            'headers': ['Nome', 'Àrea de Atuação', 'Telefone', 'Celular', 'E-mail', 'Ações'],
         });
 
         this._editAction = editAction;
@@ -21,7 +21,7 @@ export default class ProfessionalsTable extends ModelTable {
             new ListenerAction('click', () => this._removeAction(professional.id)));
 
         return this._createTableLine(professional.id, 
-            [professional.name, professional.departament, professional.residencialPhone, professional.cellphone], 
+            [professional.name, professional.departament, professional.residencialPhone, professional.cellphone, professional.email], 
             btnEdit, btnRemove);
     }
 }

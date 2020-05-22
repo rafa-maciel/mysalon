@@ -43,6 +43,6 @@ export default class ProfessionalService {
     }
 
     _getProfessionalFromData(data) {
-        return new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['id']);
+        return new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['email'], data['id']);
     }
 }

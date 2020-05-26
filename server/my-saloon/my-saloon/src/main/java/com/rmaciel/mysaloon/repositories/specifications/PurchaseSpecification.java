@@ -15,13 +15,15 @@ import org.springframework.data.jpa.domain.Specification;
 public abstract class PurchaseSpecification {
     public static Specification<Purchase> getByValue(SearchCriteria<BigDecimal> criteria) {
         return (root, query, criteriaBuilder) -> {
-            return SpecificationUtils.filterByBigDecimal(root, query, criteriaBuilder, criteria, Purchase_.value);
+            Path<BigDecimal> path = root.get(Purchase_.value);
+            return SpecificationUtils.filterByBigDecimal(path, query, criteriaBuilder, criteria);
         };
     }
 
     public static Specification<Purchase> getByDate(SearchCriteria<Calendar> criteria) {
         return (root, query, criteriaBuilder) -> {
-            return SpecificationUtils.filterByDate(root, query, criteriaBuilder, criteria, Purchase_.date);
+            Path<Calendar> path = root.get(Purchase_.date);
+            return SpecificationUtils.filterByDate(path, query, criteriaBuilder, criteria);
         };
     }
 

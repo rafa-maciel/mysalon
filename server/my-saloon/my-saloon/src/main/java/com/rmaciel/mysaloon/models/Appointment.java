@@ -31,6 +31,7 @@ public class Appointment {
     private Professional professional;
 
     @NotNull
+    
     private LocalDate date;
 
     @NotNull

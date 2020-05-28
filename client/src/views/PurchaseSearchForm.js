@@ -9,7 +9,7 @@ export default class PurchaseSearchForm extends Form {
             'id': 'purchaseSearchForm',
             'buttons': true,
             'initialButtons': [
-                new Button('Filtrar', 'btn btn-primary btn-sm float-rigth', 'submit'),
+                new Button('Filtrar', 'btn btn-primary btn-sm float-right', 'submit'),
                 new Button('Limpar Filtro', 'btn btn-secondary btn-sm', 'reset'),
             ],
             listeners

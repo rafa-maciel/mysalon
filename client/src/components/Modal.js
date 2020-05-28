@@ -22,9 +22,14 @@ export default class Modal extends Component{
         $(this._tag).modal('hide')
     }
 
+
     updateContent(content) {
         document.querySelector(`${this._tag} .modal-body`).innerHTML = '';
         document.querySelector(`${this._tag} .modal-body`).appendChild(content);
+    }
+
+    cleanContent() {
+        document.querySelector(`${this._tag} .modal-body`).innerHTML = '';
     }
 
     updateContentText(content) {
@@ -34,6 +39,10 @@ export default class Modal extends Component{
     updateFooter(footer) {
         document.querySelector(`${this._tag} .modal-footer`).innerHTML = '';
         document.querySelector(`${this._tag} .modal-footer`).appendChild(footer);
+    }
+
+    cleanFooter() {
+        document.querySelector(`${this._tag} .modal-footer`).innerHTML = '';
     }
 
     get contentSelector() {

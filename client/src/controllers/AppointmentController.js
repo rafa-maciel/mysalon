@@ -13,6 +13,8 @@ import AppointmentForm from '../views/AppointmentForm';
 import Appointment from "../models/Appointment";
 import Button from "../components/Button";
 import ListenerAction from "../components/ListenerAction";
+import NavTabPanel from "../components/NavTabPanel";
+import AppointmentTabPanelForm from "../views/AppointmentTabPanelForm";
 
 export default class AppointmentController extends DefaultDashboardController {
     _init() {
@@ -33,7 +35,9 @@ export default class AppointmentController extends DefaultDashboardController {
         let tablePanel = "#appointmentList";
 
         this._appointments = new ProxyModelComponent(new ModelList(),
-            new AppointmentTable(tablePanel), 'add', 'remove', 'clean');
+            new AppointmentTable(tablePanel,
+                id => {this._editAppointment(id)}),
+            'add', 'remove', 'clean');
 
         this._tableNav = new PageableNavigation(tablePanel, {
             'id': 'tableNav'
@@ -61,21 +65,49 @@ export default class AppointmentController extends DefaultDashboardController {
             'title': 'Formulário de Atendimento',
             'footer': true
         });
-        this._form = new AppointmentForm(this._modalForm.contentSelector);
+
+        this._panelForm = new AppointmentTabPanelForm(this._modalForm.contentSelector);
+
         this._modalForm.updateFooter(
             new Button('Salvar', 'btn btn-primary btn-lg', 'button',
-                new ListenerAction('click', () => {this.savePurchaseForm()}))
+                new ListenerAction('click', () => {this.saveAppointmentForm()}))
         );
 
         document.querySelector('.btn-create-appointment')
-            .addEventListener('click', () => {this._createPurchase()});
-
+            .addEventListener('click', () => {this._createAppointment()});
     }
     
 
-    _createPurchase() {
-        this._form.appointment = new Appointment();
+    _createAppointment() {
+        this._panelForm.newMode();
         this._modalForm.show();
+    }
+
+    _editAppointment(id) {
+        this._preLoader.run(
+            this._service.getDetailed(id)
+                .then(appointment => {
+                    this._panelForm.updateMode(appointment);
+                    this._modalForm.show();
+                })
+        );
+    }
+
+    saveAppointmentForm() {
+        let appointmentDTO = this._panelForm.getAppointmentDTO();
+        
+        let promisse = this._panelForm.isUpdateMode() ?
+            this._service.updateAppointment(appointmentDTO) :
+            this._service.createAppointment(appointmentDTO);
+
+        this._preLoader.run(
+            promisse.then(appointment => {
+                this._appointments.add(appointment);
+                this._modalForm.hide();
+                this._message.update('', 'Os dados do atendimento foram salvos com sucesso', 'success');
+            })
+        )
+
     }
 
     searchAppointments(page=null) {

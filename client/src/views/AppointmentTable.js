@@ -1,6 +1,7 @@
 import ModelTable from "../components/ModelTable";
 import Button from "../components/Button";
 import DateFormat from "../helpers/DateFormatHelper";
+import ListenerAction from "../components/ListenerAction";
 
 export default class AppointmentTable extends ModelTable {
     constructor(parentSelector, editAction, removeAction) {
@@ -14,7 +15,9 @@ export default class AppointmentTable extends ModelTable {
     }
 
     _createLineTableFromModel(appointment) {
-        let btnEdit = new Button('Editar', 'btn btn-outline-primary btn-sm', 'button');
+        let btnEdit = new Button('Editar', 'btn btn-outline-primary btn-sm', 'button',
+            new ListenerAction('click', () => this._editAction(appointment.id)));
+            
         let btnRemove = new Button('Remover', 'btn btn-outline-danger btn-sm', 'button');
 
         return this._createTableLine(appointment.id, [appointment.customer.fullname, appointment.professional.name, 

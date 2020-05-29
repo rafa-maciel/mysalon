@@ -9,6 +9,7 @@ import ListenerAction from "../components/ListenerAction";
 import Customer from "../models/Customer";
 import CustomerService from "../services/CustomerService";
 import CustomerSelectTable from "./CustomerSelectTable";
+import AppointmentDTO from "../dtos/AppointmentsDTO";
 
 export default class AppointmentForm extends Form {
     constructor(parentSelector, ...listeners) {
@@ -78,7 +79,10 @@ export default class AppointmentForm extends Form {
     }
 
     getAsDTO() {
-        console.log("needs to be implemented");
+        let data = this.getData();
+        
+        return new AppointmentDTO(data['customerId'], data['professionalId'], data['date'], 
+            data['time'], data['title'], data['notes'], data['done'], data['id']);
     }
 
     _template() {
@@ -88,9 +92,9 @@ export default class AppointmentForm extends Form {
         let template = `
             <div>
                 <input type="hidden" class="form-control" name="id" 
-                    valeu="${this._appointment.id ? this._appointment.id : ''}" />
-                <input type="hidden" class="form-control" name="customerId" required
-                    valeu="${this._appointment.customer ? this._appointment.customer.id : ''}" />
+                    value="${this._appointment.id ? this._appointment.id : ''}" />
+                <input type="hidden" class="form-control" name="customerId"
+                    value="${this._appointment.customer ? this._appointment.customer.id : ''}" />
                 
                 <div class="form-group">
                     <label for="customerName">Cliente</label>
@@ -107,7 +111,10 @@ export default class AppointmentForm extends Form {
                     <label for="professionalId">Professional Responsável</label>
                     <select name="professionalId" class="form-control">
                         ${this._professionalList.map(professional => `
-                            <option value="${professional.id}">${professional.name}</option>
+                            <option value="${professional.id}" ${this._appointment.professional && 
+                                this._appointment.professional.id == professional.id ? 'selected' : ''}>
+                                    ${professional.name}
+                            </option>
                         `).join('')}
                     </select>
                 </div>
@@ -116,7 +123,7 @@ export default class AppointmentForm extends Form {
                     <div class="form-group col-md-6">
                         <label for="date">Data</label>
                         <input type="date" class="form-control" name="date" 
-                            value="${this._appointment.date ? this._appointment.date : ''}">
+                            value="${this._appointment.date ? this._appointment.date.toISOString().slice(0,10) : ''}">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="time">Horário</label>
@@ -133,10 +140,15 @@ export default class AppointmentForm extends Form {
 
                 <div class="form-group">
                     <label for="notes">Anotações</label>
-                    <textarea class="form-control" name="notes">
-                        ${this._appointment.notes ? this._appointment.notes : ''}
-                    </textarea>
+                    <textarea class="form-control" name="notes">${this._appointment.notes ? this._appointment.notes : ''}</textarea>
                 </div>
+
+                ${this._appointment.id ? `
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" name="done" value="true" ${this._appointment.done ? 'checked' : ''}>
+                        <label class="form-check-label">Concluido</label>
+                    </div>
+                ` : ''}
             </div>
         `;
 

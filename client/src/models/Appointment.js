@@ -1,11 +1,12 @@
 import Model from "./Model";
+import DateFormatHelper from "../helpers/DateFormatHelper";
 
 export default class Appointment extends Model{
     constructor(customer, professional, date, time, title, notes, done, service=null, id='') {
         super();
         this._customer = customer;
         this._professional = professional;
-        this._date = new Date(date);
+        this._date = date ? new Date(DateFormatHelper.toDate(date)) : null;
         this._time = time;
         this._title = title;
         this._notes = notes;

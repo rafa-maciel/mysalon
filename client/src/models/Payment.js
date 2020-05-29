@@ -1,11 +1,13 @@
 import Model from "./Model";
+import PaymentMethod from "./PaymentMethod";
+import DateFormatHelper from "../helpers/DateFormatHelper";
 
 export default class Payment extends Model {
-    constructor(service, value, method, date, notes, id=null) {
-        this._service = service;
+    constructor(value, method, date, notes, id=null) {
+        super();
         this._value = value;
-        this._method = method;
-        this._date = date;
+        this._method = method ? new PaymentMethod(method) : new PaymentMethod('MONEY');
+        this._date = date ? new Date(DateFormatHelper.toDate(date)) : null;
         this._notes = notes;
         this._id = id;
     }
@@ -16,10 +18,6 @@ export default class Payment extends Model {
 
     equalsFor(id) {
         return this._id == id;
-    }
-
-    get service() {
-        return this._service;
     }
 
     get value() {

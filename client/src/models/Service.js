@@ -1,8 +1,8 @@
 import Model from "./Model";
 
 export default class Service extends Model {
-    constructor(appointment, notes, payment, id=null) {
-        this._appointment = appointment;
+    constructor(notes, payment, id=null) {
+        super();
         this._notes = notes;
         this._payment = payment;
         this._id = id;
@@ -14,10 +14,6 @@ export default class Service extends Model {
 
     equalsFor(id) {
         return this._id == other.id;
-    }
-
-    get appointment() {
-        return this._appointment;
     }
 
     get notes() {

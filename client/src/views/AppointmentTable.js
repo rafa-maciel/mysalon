@@ -18,7 +18,8 @@ export default class AppointmentTable extends ModelTable {
         let btnEdit = new Button('Editar', 'btn btn-outline-primary btn-sm', 'button',
             new ListenerAction('click', () => this._editAction(appointment.id)));
             
-        let btnRemove = new Button('Remover', 'btn btn-outline-danger btn-sm', 'button');
+        let btnRemove = new Button('Remover', 'btn btn-outline-danger btn-sm', 'button',
+        new ListenerAction('click', () => this._removeAction(appointment.id)));
 
         return this._createTableLine(appointment.id, [appointment.customer.fullname, appointment.professional.name, 
             DateFormat.toString(appointment.date), appointment.time, appointment.title, 

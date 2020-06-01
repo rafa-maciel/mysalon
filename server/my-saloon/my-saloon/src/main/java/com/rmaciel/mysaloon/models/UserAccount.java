@@ -3,6 +3,7 @@ package com.rmaciel.mysaloon.models;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,6 +37,7 @@ public class UserAccount implements UserDetails {
 
     @NotEmpty
     @Email
+    @Column(unique = true)
     private String email;
 
     @NotEmpty
@@ -55,6 +57,10 @@ public class UserAccount implements UserDetails {
         this.professional = professional;
         this.email = email;
         this.role = role;
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+    public void changePassword(String password) {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 

@@ -21,7 +21,8 @@ export default class CustomerSelectTable extends ModelTable {
 
     search() {
         let name = this._component.querySelector("#searchCustomerName").value;
-        let parameter = 'fullname=' + name;
+        let parameter = 'fullname=' + name + '&size=3';
+
         this._customers.clean();
         this._customerService.getCustomers(parameter)
             .then(pageable => {

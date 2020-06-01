@@ -15,6 +15,8 @@ import Button from "../components/Button";
 import ListenerAction from "../components/ListenerAction";
 import NavTabPanel from "../components/NavTabPanel";
 import AppointmentTabPanelForm from "../views/AppointmentTabPanelForm";
+import ConfirmModal from "../components/ConfirmModal";
+import DateFormatHelper from "../helpers/DateFormatHelper";
 
 export default class AppointmentController extends DefaultDashboardController {
     _init() {
@@ -23,6 +25,7 @@ export default class AppointmentController extends DefaultDashboardController {
         this._initAlertMessages();
         this._initAppointmentsTable();
         this._initAppointmentFormModal();
+        this._initRemoveConfirmationModal();
     }
 
     _initAlertMessages() {
@@ -36,7 +39,8 @@ export default class AppointmentController extends DefaultDashboardController {
 
         this._appointments = new ProxyModelComponent(new ModelList(),
             new AppointmentTable(tablePanel,
-                id => {this._editAppointment(id)}),
+                id => {this._editAppointment(id)}, 
+                id => {this._showRemoveModalConfirmation(id)}),
             'add', 'remove', 'clean');
 
         this._tableNav = new PageableNavigation(tablePanel, {
@@ -56,7 +60,12 @@ export default class AppointmentController extends DefaultDashboardController {
         document.querySelector('.btn-show-search-modal')
             .addEventListener('click', () => {this._searchModal.show()});
 
-        this._searchForm = new AppointmentSearchForm(this._searchModal.contentSelector);
+        this._searchForm = new AppointmentSearchForm(this._searchModal.contentSelector, 
+            new ListenerAction('submit', event => {
+                event.preventDefault();
+                this.searchAppointments();
+                this._searchModal.hide();
+            }));
     }
 
     _initAppointmentFormModal() {
@@ -76,7 +85,16 @@ export default class AppointmentController extends DefaultDashboardController {
         document.querySelector('.btn-create-appointment')
             .addEventListener('click', () => {this._createAppointment()});
     }
+
+    _initRemoveConfirmationModal() {
+        this._modalRemoveConfirmation = new ConfirmModal("main", {
+            "id": "removeConfirmationModal",
+            "title": 'Remover Atendimento',
+            "buttonLabel": "Remover Definitivamente"
+        }, id => {this.deleteAppointment(id)});
+    }
     
+
 
     _createAppointment() {
         this._panelForm.newMode();
@@ -91,6 +109,16 @@ export default class AppointmentController extends DefaultDashboardController {
                     this._modalForm.show();
                 })
         );
+    }
+
+    _showRemoveModalConfirmation(id) {
+        let appointment = this._appointments.find(id);
+        this._modalRemoveConfirmation.update(`
+            Você tem certeza que deseja remover definitivamente o atendimento do
+            cliente ${appointment.customer.fullname} marcado para o dia
+            ${DateFormatHelper.toString(appointment.date)}?
+        `, id);
+        this._modalRemoveConfirmation.show();
     }
 
     saveAppointmentForm() {
@@ -123,6 +151,17 @@ export default class AppointmentController extends DefaultDashboardController {
                     });
                     this._tableNav.update(pageable);
                     this._message.update('A lista de atendimentos está atualizada', 'Lista Atualizada', 'info');
+                })
+        );
+    }
+
+    deleteAppointment(id) {
+        this._preLoader.run(
+            this._service.deleteAppointment(id)
+                .then(() => {
+                    this._modalRemoveConfirmation.hide();
+                    this._appointments.remove(id);
+                    this._message.update('', 'Atendimento removido com sucesso', 'success');
                 })
         );
     }

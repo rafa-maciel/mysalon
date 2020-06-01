@@ -1,7 +1,7 @@
 package com.rmaciel.mysaloon.controllers.forms;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import com.rmaciel.mysaloon.models.PaymentMethod;
 import com.rmaciel.mysaloon.models.Purchase;
@@ -18,18 +18,18 @@ public class PurchaseSearchForm {
     private SearchOperation valueOperation;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd")
-    private Calendar date;
+    private LocalDate date;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd")
-    private Calendar dateMax;
+    private LocalDate dateMax;
     private SearchOperation dateOperation;
 
     private PaymentMethod paymentMethod;
 
     private Long vendorId;
 
-    public PurchaseSearchForm(BigDecimal value, BigDecimal valueMax, SearchOperation valueOperation, Calendar date,
-        Calendar dateMax, SearchOperation dateOperation, PaymentMethod paymentMethod, Long vendorId) {
+    public PurchaseSearchForm(BigDecimal value, BigDecimal valueMax, SearchOperation valueOperation, LocalDate date,
+        LocalDate dateMax, SearchOperation dateOperation, PaymentMethod paymentMethod, Long vendorId) {
         this.value = value;
         this.valueMax = valueMax;
         this.valueOperation = valueOperation;
@@ -42,7 +42,7 @@ public class PurchaseSearchForm {
 
     public Specification<Purchase> buildSpecification() {
         return PurchaseSpecification.getByValue(new SearchCriteria<BigDecimal>(valueOperation, value, valueMax))
-            .and(PurchaseSpecification.getByDate(new SearchCriteria<Calendar>(dateOperation, date, dateMax)))
+            .and(PurchaseSpecification.getByDate(new SearchCriteria<LocalDate>(dateOperation, date, dateMax)))
             .and(PurchaseSpecification.getByPaymentMethod(new SearchCriteria<PaymentMethod>(paymentMethod)))
             .and(PurchaseSpecification.getByVendor(new SearchCriteria<Long>(vendorId)));
 
@@ -57,7 +57,7 @@ public class PurchaseSearchForm {
         return this.valueOperation;
     }
 
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
@@ -73,7 +73,7 @@ public class PurchaseSearchForm {
         return this.valueMax;
     }
 
-    public Calendar getDateMax() {
+    public LocalDate getDateMax() {
         return this.dateMax;
     }
 

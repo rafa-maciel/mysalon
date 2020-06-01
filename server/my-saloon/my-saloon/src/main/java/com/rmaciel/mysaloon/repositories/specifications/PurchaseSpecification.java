@@ -1,7 +1,7 @@
 package com.rmaciel.mysaloon.repositories.specifications;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import javax.persistence.criteria.Path;
 
@@ -20,10 +20,10 @@ public abstract class PurchaseSpecification {
         };
     }
 
-    public static Specification<Purchase> getByDate(SearchCriteria<Calendar> criteria) {
+    public static Specification<Purchase> getByDate(SearchCriteria<LocalDate> criteria) {
         return (root, query, criteriaBuilder) -> {
-            Path<Calendar> path = root.get(Purchase_.date);
-            return SpecificationUtils.filterByDate(path, query, criteriaBuilder, criteria);
+            Path<LocalDate> path = root.get(Purchase_.date);
+            return SpecificationUtils.filterByLocalDate(path, query, criteriaBuilder, criteria);
         };
     }
 

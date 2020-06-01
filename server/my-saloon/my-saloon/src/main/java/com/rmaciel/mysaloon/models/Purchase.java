@@ -1,7 +1,7 @@
 package com.rmaciel.mysaloon.models;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -26,8 +24,8 @@ public class Purchase {
     @NotNull
     private BigDecimal value;
 
-    @Temporal(TemporalType.DATE)
-    private Calendar date;
+    @NotNull
+    private LocalDate date;
 
     @NotNull @NotEmpty
     private String notes;
@@ -43,7 +41,7 @@ public class Purchase {
     }
 
 
-    public Purchase(BigDecimal value, Calendar date, String notes, PaymentMethod paymentMethod, Vendor vendor) {
+    public Purchase(BigDecimal value, LocalDate date, String notes, PaymentMethod paymentMethod, Vendor vendor) {
         this.value = value;
         this.date = date;
         this.notes = notes;
@@ -71,7 +69,7 @@ public class Purchase {
     public Vendor getVendor() {
         return this.vendor;
     }
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -88,7 +86,7 @@ public class Purchase {
         this.vendor = vendor;
     }
 
-    public void setDate(Calendar date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -1,7 +1,7 @@
 package com.rmaciel.mysaloon.controllers.dtos;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rmaciel.mysaloon.models.PaymentMethod;
@@ -12,7 +12,7 @@ public class PurchaseDTO {
     private BigDecimal value;
 
     @JsonFormat(pattern="yyyy-MM-dd")
-    private Calendar date;
+    private LocalDate date;
     private String notes;
     private PaymentMethod paymentMethod;
     private String vendorName;
@@ -35,7 +35,7 @@ public class PurchaseDTO {
         return this.value;
     }
     
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

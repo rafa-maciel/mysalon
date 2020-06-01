@@ -42,6 +42,11 @@ export default class AppointmentService {
             .then(data => this._getAppointmentFromData(data));
     }
 
+    deleteAppointment(id) {
+        let endpoint = this._serverUrl + "/" + id;
+        return this._http.delete(endpoint);
+    }
+
     _getAppointmentFromData(data) {
         let customer = this._getCustomerFromData(data['customer']);
         let professional = this._getProfessionalFromData(data['professional']);

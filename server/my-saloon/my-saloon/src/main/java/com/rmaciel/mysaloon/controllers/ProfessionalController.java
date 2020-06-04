@@ -84,6 +84,15 @@ public class ProfessionalController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<ProfessionalDTO> findByEmail(@PathVariable String email) {
+        Optional<Professional> optional = repository.findByAccountEmail(email);
+        if (!optional.isPresent())
+            return ResponseEntity.badRequest().build();
+        
+        return ResponseEntity.ok(new ProfessionalDTO(optional.get()));
+    }
+
     @GetMapping
     public ResponseEntity<List<ProfessionalDTO>> listAll() {
         List<ProfessionalDTO> professionals = new ArrayList<>();

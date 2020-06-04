@@ -1,5 +1,7 @@
 package com.rmaciel.mysaloon.repositories;
 
+import java.util.Optional;
+
 import com.rmaciel.mysaloon.models.Professional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,4 +21,6 @@ public interface ProfessionalRepository extends CrudRepository<Professional, Lon
     @Override
     @CacheEvict(value = "allProfessionals", allEntries = true)
     public void delete(Professional entity);
+
+	public Optional<Professional> findByAccountEmail(String email);
 }

@@ -7,12 +7,20 @@ export default class HttpHelper {
         window.localStorage.setItem('msaloonwbtoken', data);
     }
 
+    storeItem(label, value) {
+        window.localStorage.setItem(label, value);
+    }
+
     cleanToken() {
         window.localStorage.setItem('msaloonwbtoken', null);
     }
 
     get token() {
         return window.localStorage.getItem('msaloonwbtoken');
+    }
+
+    getStoredItem(label) {
+        return window.localStorage.getItem(label);
     }
 
     post(endpoint, data) {

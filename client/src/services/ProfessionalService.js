@@ -37,15 +37,27 @@ export default class ProfessionalService {
             .then(data => this._getProfessionalFromData(data));
     }
 
+    
+
     deteleProfessional(id) {
         let endpoint = `${this._serverURL}/${id}`;
         return this._http.delete(endpoint);
     }
 
+    getProfessionalByEmail(email) {
+        let endpoint = `${this._serverURL}/email/${email}`;
+        return this._http.get(endpoint)
+            .then(data => this._getProfessionalFromData(data));
+    }
+
     restorePassword(email) {
-        console.log(email);
         let endpoint = `${SERVICE_URL}/accounts/restore`;
         return this._http.post(endpoint, JSON.stringify({'email': email}));
+    }
+
+    resetPassword(password) {
+        let endpoint = `${SERVICE_URL}/accounts/reset`;
+        return this._http.post(endpoint, JSON.stringify({'password': password}));
     }
 
     _getProfessionalFromData(data) {

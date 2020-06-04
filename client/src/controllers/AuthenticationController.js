@@ -1,6 +1,7 @@
 import AuthenticationTokenService from "../services/AuthenticationTokenService";
 import AuthenticationForm from "../views/AuthenticationForm";
 import ListenerAction from "../components/ListenerAction";
+import HttpHelper from "../helpers/HttpHelper";
 
 export default class AuthenticationController {
     constructor() {
@@ -22,9 +23,11 @@ export default class AuthenticationController {
 
     sigin() {
         let dto = this._form.getAuthenticationDTO();
+        let http = new HttpHelper();
         this._authService.authenticate(dto)
             .then(() => {
                 window.location.href = '/customers.html';
+                http.storeItem('email', dto.email);
             })
             .catch(() => {
                 this._form.invalidFormData();

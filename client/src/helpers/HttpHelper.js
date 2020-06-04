@@ -61,7 +61,7 @@ export default class HttpHelper {
         return fetch(endpoint, transactionDetails)
             .then(res => {
                 if (res.ok) {
-                    return res.json();
+                    return res.json().then(data =>  data).catch(err => true);
                 }
                 
                 throw new Error('A transactional error has been happened.');

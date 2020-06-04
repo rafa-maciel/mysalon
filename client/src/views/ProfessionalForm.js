@@ -4,9 +4,10 @@ import DOMParserUtil from "../helpers/DOMParserUtil";
 import Professional from '../models/Professional';
 
 export default class ProfessionalForm extends Form {
-    constructor(parentSelector, ...listeners) {
+    constructor(parentSelector, defaultButtons=false, ...listeners) {
         super(parentSelector, {
             'id': 'professionalForm',
+            'defaultButtons': defaultButtons,
             listeners
         });
 

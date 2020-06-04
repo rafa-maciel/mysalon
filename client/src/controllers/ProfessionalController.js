@@ -98,7 +98,7 @@ export default class ProfessionalController extends DefaultDashboardController {
             'footer': true
         });
 
-        this._professionalForm = new ProfessionalForm(this._modalForm.contentSelector);
+        this._professionalForm = new ProfessionalForm(this._modalForm.contentSelector, false);
     }
 
     _initRemoveConfirmationModal() {

@@ -42,6 +42,12 @@ export default class ProfessionalService {
         return this._http.delete(endpoint);
     }
 
+    restorePassword(email) {
+        console.log(email);
+        let endpoint = `${SERVICE_URL}/accounts/restore`;
+        return this._http.post(endpoint, JSON.stringify({'email': email}));
+    }
+
     _getProfessionalFromData(data) {
         return new Professional(data['name'], data['residencialPhone'], data['cellphone'], data['department'], data['email'], data['id']);
     }

@@ -23,6 +23,7 @@ export default class ProfessionalController extends DefaultDashboardController {
         this._initRemoveConfirmationModal();
         this.updateProfessionalTable();
         this._initModalFormButtons();
+        this._initConfirmRestorePassowordModal();
 
         document.querySelector('.btn-create-professional').addEventListener('click', () => {
             this._createProfessional();
@@ -64,11 +65,23 @@ export default class ProfessionalController extends DefaultDashboardController {
             }));
     }
 
+    restorePassword(email) {
+        this._preLoader.run(
+            this._service.restorePassword(email)
+                .then(() => {
+                    this._modalRestorePassword.hide();
+                    this._message.update('A senha do profissional foi restaurada e um novo padrão foi enviada para o e-mail cadastrado',
+                        'Senha Alterada', 'success');
+                })
+            )
+    }
+
     _initProfessionalsTable() {
         this._professionals = new ProxyModelComponent(new ModelList(),
             new ProfessionalsTable('#professionalList', 
                 id => {this._editProfessional(id)},
-                id => {this._confirmRemoveProfessional(id)}),
+                id => {this._confirmRemoveProfessional(id)},
+                email => {this._confirmRestorePassword(email)}),
             'add', 'remove');
     }
 
@@ -102,11 +115,26 @@ export default class ProfessionalController extends DefaultDashboardController {
                 new ListenerAction('click', () => {this.saveProfessionalForm()})));
     }
 
+    _initConfirmRestorePassowordModal() {
+        this._modalRestorePassword = new ConfirmModal('main', {
+            'id': 'restorePasswordModal',
+            'title': 'Restaurar Senha',
+            'buttonLabel': 'Restaurar senha e enviar E-mail'
+        }, email => {this.restorePassword(email)});
+
+
+    }
+
     _confirmRemoveProfessional(id) {
         let professional = this._professionals.find(id);
         this._modalConfirmRemove.update(`Você tem certeza que deseja remover definitivamente o(a) professional <strong>${professional.name}</strong> do sistema?`, 
             professional.id);
         this._modalConfirmRemove.show();
+    }
+
+    _confirmRestorePassword(email) {
+        this._modalRestorePassword.update(`Você tem certeza que deseja resetar a conta do usuário e criar um novo padrão de senha para o e-mail ${email}`, email);
+        this._modalRestorePassword.show();
     }
 
     _editProfessional(id) {

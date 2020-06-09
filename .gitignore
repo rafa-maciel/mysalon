@@ -22,3 +22,8 @@ server/my-saloon/my-saloon/target
 
 ### VS Code ###
 .vscode/
+
+
+### Node ###
+client/node_modules
+

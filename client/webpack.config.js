@@ -17,16 +17,28 @@ module.exports = {
     purchase: './src/purchase.js',
     appointment: './src/appointment.js',
     profile: './src/profile.js',
+    schedule: './src/schedule.js',
   },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   devtool: "inline-source-map",
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000
+  },
+  externals: {
+    schedule: './dist/js-libraries/schedule-template-master/js/main.js'
   },
   plugins
 };

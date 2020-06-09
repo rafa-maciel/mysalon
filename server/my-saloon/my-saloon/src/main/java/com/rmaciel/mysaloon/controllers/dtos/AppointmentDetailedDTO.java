@@ -15,6 +15,8 @@ public class AppointmentDetailedDTO {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
     private LocalTime time;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
+    private LocalTime endTime;
     private ServiceDTO service;
     private String notes;
     private String title;
@@ -26,6 +28,7 @@ public class AppointmentDetailedDTO {
         this.professional = new ProfessionalDTO(appointment.getProfessional());
         this.date = appointment.getDate();
         this.time = appointment.getTime();
+        this.endTime = appointment.getEndTime();
         this.service = appointment.getService() != null ? new ServiceDTO(appointment.getService()) : null;
         this.notes = appointment.getNotes();
         this.title = appointment.getTitle();
@@ -51,6 +54,10 @@ public class AppointmentDetailedDTO {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public ServiceDTO getService() {

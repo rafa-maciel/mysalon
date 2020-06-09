@@ -11,6 +11,7 @@ public class AppointmentDTO {
     private ProfessionalDTO professional;
     private LocalDate date;
     private LocalTime time;
+    private LocalTime endTime;
     private String notes;
     private String title;
     private boolean done;
@@ -21,6 +22,7 @@ public class AppointmentDTO {
         this.professional = new ProfessionalDTO(appointment.getProfessional());
         this.date = appointment.getDate();
         this.time = appointment.getTime();
+        this.endTime = appointment.getEndTime();
         this.notes = appointment.getNotes();
         this.title = appointment.getTitle();
         this.done = appointment.isDone();
@@ -45,6 +47,10 @@ public class AppointmentDTO {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public String getNotes() {

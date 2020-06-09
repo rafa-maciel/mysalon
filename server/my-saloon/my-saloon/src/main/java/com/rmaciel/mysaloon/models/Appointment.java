@@ -36,6 +36,9 @@ public class Appointment {
     @NotNull
     private LocalTime time;
 
+    @NotNull
+    private LocalTime endTime;
+
     private String title;
     private String notes;
     private boolean done = false;
@@ -46,12 +49,13 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(Customer customer, Professional professional, LocalDate date, LocalTime time, String notes,
-            String title, boolean done) {
+    public Appointment(Customer customer, Professional professional, LocalDate date, LocalTime time, LocalTime endTime,
+            String notes, String title, boolean done) {
         this.customer = customer;
         this.professional = professional;
         this.date = date;
         this.time = time;
+        this.endTime = endTime;
         this.notes = notes;
         this.title = title;
         this.done = done;
@@ -75,6 +79,10 @@ public class Appointment {
 
     public LocalTime getTime() {
         return this.time;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public String getNotes() {
@@ -105,6 +113,11 @@ public class Appointment {
     public void setTime(LocalTime time) {
        this.time = time;
     }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+    
     public void setNotes(String notes) {
         this.notes = notes;
     }

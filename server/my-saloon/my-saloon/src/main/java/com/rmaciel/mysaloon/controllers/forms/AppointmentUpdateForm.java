@@ -25,18 +25,22 @@ public class AppointmentUpdateForm {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
     private LocalTime time;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm")
+    private LocalTime endTime;
+
     private String notes;
-	private ServiceForm serviceForm;
+    private ServiceForm serviceForm;
     private String title;
     private boolean done;
 
-    public AppointmentUpdateForm(Long customerId, Long professionalId, LocalDate date, LocalTime time, String notes,
-            String title, boolean done, Long serviceId, String serviceNotes, BigDecimal paymentValue,
-            PaymentMethod paymentMethod, LocalDate paymentDate, String paymentNotes) {
+    public AppointmentUpdateForm(Long customerId, Long professionalId, LocalDate date, LocalTime time,
+            LocalTime endTime, String notes, String title, boolean done, Long serviceId, String serviceNotes,
+            BigDecimal paymentValue, PaymentMethod paymentMethod, LocalDate paymentDate, String paymentNotes) {
         this.customerId = customerId;
         this.professionalId = professionalId;
         this.date = date;
         this.time = time;
+        this.endTime = endTime;
         this.notes = notes;
         this.title = title;
         this.done = done;
@@ -55,6 +59,7 @@ public class AppointmentUpdateForm {
         appointment.setDate(date);
 
         appointment.setTime(time);
+        appointment.setEndTime(endTime);
         appointment.setNotes(notes);
         appointment.setTitle(title);
         appointment.setDone(done);
@@ -76,6 +81,10 @@ public class AppointmentUpdateForm {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public String getNotes() {

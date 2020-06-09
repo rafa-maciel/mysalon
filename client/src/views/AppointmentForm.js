@@ -82,7 +82,7 @@ export default class AppointmentForm extends Form {
         let data = this.getData();
         
         return new AppointmentDTO(data['customerId'], data['professionalId'], data['date'], 
-            data['time'], data['title'], data['notes'], data['done'], data['id']);
+            data['time'], data['endTime'], data['title'], data['notes'], data['done'], data['id']);
     }
 
     _template() {
@@ -119,16 +119,22 @@ export default class AppointmentForm extends Form {
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="date">Data</label>
+                    <input type="date" class="form-control" name="date" 
+                        value="${this._appointment.date ? this._appointment.date.toISOString().slice(0,10) : ''}">
+                </div>
+
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="date">Data</label>
-                        <input type="date" class="form-control" name="date" 
-                            value="${this._appointment.date ? this._appointment.date.toISOString().slice(0,10) : ''}">
-                    </div>
                     <div class="form-group col-md-6">
                         <label for="time">Horário</label>
                         <input type="time" class="form-control" name="time"
                             value="${this._appointment.time ? this._appointment.time : ''}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="endTime">Previsão de Termino</label>
+                        <input type="time" class="form-control" name="endTime"
+                            value="${this._appointment.endTime ? this._appointment.endTime : ''}">
                     </div>
                 </div>
 

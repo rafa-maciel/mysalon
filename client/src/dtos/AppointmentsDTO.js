@@ -1,12 +1,13 @@
 import DateFormatHelper from "../helpers/DateFormatHelper";
 
 export default class AppointmentDTO {
-    constructor(customerId, professionalId, date, time, title, notes, done=false, id=null,
+    constructor(customerId, professionalId, date, time, endTime, title, notes, done=false, id=null,
             serviceNotes=null, paymentValue=null, paymentMethod=null, paymentDate=null, paymentNotes=null) {
         this.customerId = customerId;
         this.professionalId = professionalId;
         this.date = date ? new Date(DateFormatHelper.toDate(date)) : null;
         this.time = time;
+        this.endTime = endTime;
         this.title = title;
         this.notes = notes;
         this.done = done;

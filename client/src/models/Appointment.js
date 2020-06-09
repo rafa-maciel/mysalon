@@ -2,12 +2,13 @@ import Model from "./Model";
 import DateFormatHelper from "../helpers/DateFormatHelper";
 
 export default class Appointment extends Model{
-    constructor(customer, professional, date, time, title, notes, done, service=null, id='') {
+    constructor(customer, professional, date, time, endTime, title, notes, done, service=null, id='') {
         super();
         this._customer = customer;
         this._professional = professional;
         this._date = date ? new Date(DateFormatHelper.toDate(date)) : null;
         this._time = time;
+        this._endTime = endTime;
         this._title = title;
         this._notes = notes;
         this._done = done;
@@ -40,6 +41,10 @@ export default class Appointment extends Model{
 
     get time() {
         return this._time;
+    }
+
+    get endTime() {
+        return this._endTime;
     }
 
     get title() {

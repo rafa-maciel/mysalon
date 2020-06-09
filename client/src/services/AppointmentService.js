@@ -53,7 +53,7 @@ export default class AppointmentService {
         let service = data['service'] ? this._getServiceFromData(data['service']) : null;
         
         return new Appointment(customer, professional, data['date'], 
-            data['time'], data['title'], data['notes'], data['done'], service, data['id']);
+            data['time'], data['endTime'], data['title'], data['notes'], data['done'], service, data['id']);
     }
 
     _getCustomerFromData(data) {

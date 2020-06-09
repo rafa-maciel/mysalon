@@ -17,7 +17,7 @@ module.exports = {
     purchase: './src/purchase.js',
     appointment: './src/appointment.js',
     profile: './src/profile.js',
-    schedule: './src/schedule.js',
+    calendar: './src/calendar.js',
   },
   output: {
     filename: '[name].bundle.js',

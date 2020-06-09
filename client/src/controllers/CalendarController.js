@@ -3,7 +3,7 @@ import AppointmentService from "../services/AppointmentService";
 import CalendarEvent from "../models/CalendarEvent";
 import Calendar from "../components/Calendar";
 
-export default class ScheduleController extends DefaultDashboardController {
+export default class CalendarController extends DefaultDashboardController {
     _init() {
         this._appointmentService = new AppointmentService();
         this._initScheduleComponent();

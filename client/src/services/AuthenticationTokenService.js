@@ -12,6 +12,10 @@ export default class AuthenticationTokenService {
         return this._http.get(this._serverURL);
     }
 
+    getProfessionalLoggedEmail() {
+        return this._http.getStoredItem("email");
+    }
+
     authenticate(authDTO) {
         let transactionDetails = {
             'method': 'POST',

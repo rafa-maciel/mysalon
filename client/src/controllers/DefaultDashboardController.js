@@ -26,6 +26,10 @@ export default class DefaultDashboardController {
         this._authService.redirectToLoginPage();
     }
 
+    _getProfessionalLoggedEmail() {
+        return this._authService.getProfessionalLoggedEmail();
+    }
+
     _init() {
         throw new Error('the _init() method must be implemented');
     }

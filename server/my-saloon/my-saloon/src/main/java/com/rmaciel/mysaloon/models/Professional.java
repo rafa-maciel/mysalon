@@ -32,17 +32,22 @@ public class Professional {
     @Length(max = 16)
     private String cellphone;
 
+    @Length(max = 7)
+    private String indentifiedColor;
+
     @OneToOne(mappedBy = "professional", orphanRemoval = true)
     private UserAccount account;
 
     public Professional() {
     }
- 
-    public Professional(String name, Department department, String residencialPhone, String cellphone) {
+
+    public Professional(String name, Department department, String residencialPhone, String cellphone,
+            String identifiedColor) {
         this.name = name;
         this.department = department;
         this.residencialPhone = residencialPhone;
         this.cellphone = cellphone;
+        indentifiedColor = identifiedColor;
     }
 
     public String getEmail() {
@@ -87,6 +92,14 @@ public class Professional {
 
     public UserAccount getAccount() {
         return account;
+    }
+
+    public String getIndentifiedColor() {
+        return indentifiedColor;
+    }
+
+    public void setIndentifiedColor(String indentifiedColor) {
+        this.indentifiedColor = indentifiedColor;
     }
        
     

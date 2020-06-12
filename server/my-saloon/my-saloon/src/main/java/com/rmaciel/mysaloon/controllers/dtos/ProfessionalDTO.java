@@ -11,6 +11,7 @@ public class ProfessionalDTO {
     private String residencialPhone;
     private String cellphone;
     private String email;
+    private String identifiedColor;
 
     public ProfessionalDTO() {
     }
@@ -22,6 +23,7 @@ public class ProfessionalDTO {
         this.residencialPhone = professional.getResidencialPhone();
         this.cellphone = professional.getCellphone();
         this.email = professional.getEmail();
+        this.identifiedColor = professional.getIndentifiedColor();
     }
 
     public ProfessionalDTO(Professional professional, String email) {
@@ -31,6 +33,7 @@ public class ProfessionalDTO {
         this.department = professional.getDepartment();
         this.residencialPhone = professional.getResidencialPhone();
         this.cellphone = professional.getCellphone();
+        this.identifiedColor = professional.getIndentifiedColor();
     }    
 
     public Long getId() {
@@ -55,6 +58,10 @@ public class ProfessionalDTO {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getIdentifiedColor() {
+        return identifiedColor;
     }
 
 

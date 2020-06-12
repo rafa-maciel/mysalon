@@ -19,21 +19,24 @@ public class ProfessionalForm {
     private String cellphone;
 
     private String email;
+    @Size(max = 7)
+    private String identifiedColor;
 
     private AccountRole role;
 
     public ProfessionalForm(String name, Department department, String residencialPhone, String cellphone, String email,
-            AccountRole role) {
+            AccountRole role, String identifiedColor) {
         this.name = name;
         this.department = department;
         this.residencialPhone = residencialPhone;
         this.cellphone = cellphone;
         this.email = email;
         this.role = role;
+        this.identifiedColor = identifiedColor;
     }
 
     public Professional convert() {
-		return new Professional(name, department, residencialPhone, cellphone);
+		return new Professional(name, department, residencialPhone, cellphone, identifiedColor);
     }
 
     public boolean hasEmail() {
@@ -45,6 +48,7 @@ public class ProfessionalForm {
         professional.setDepartment(this.department);
         professional.setCellphone(this.cellphone);
         professional.setResidencialPhone(this.residencialPhone);
+        professional.setIndentifiedColor(this.identifiedColor);
     }
 
     public String getName() {
@@ -69,6 +73,10 @@ public class ProfessionalForm {
 
     public AccountRole getRole() {
         return role;
+    }
+
+    public String getIdentifiedColor() {
+        return identifiedColor;
     }
 
 }

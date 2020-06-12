@@ -7,5 +7,6 @@ export default class CalendarEvent {
         this.start = DateFormatHelper.toDateFullCalendarFormatted(appointment.date, appointment.time);
         this.end = DateFormatHelper.toDateFullCalendarFormatted(appointment.date, appointment.endTime);
         this.appointment = appointment;
+        this.backgroundColor = appointment.professional.identifiedColor;
     }
 }

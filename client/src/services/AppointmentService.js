@@ -64,7 +64,7 @@ export default class AppointmentService {
 
     _getProfessionalFromData(data) {
         return new Professional(data['name'], data['residencialPhone'], 
-            data['cellphone'], data['department'], data['email'], data['id']);
+            data['cellphone'], data['department'], data['email'], data['identifiedColor'], data['id']);
     }
 
     _getServiceFromData(data) {

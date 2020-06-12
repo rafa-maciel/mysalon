@@ -22,17 +22,24 @@ export default class ProfessionalForm extends Form {
 
     get professional() {
         let data = this.getData();
-        return new ProfessionalDTO(data['name'], data['residencialPhone'], data['cellphone'], data['departament'], data['email'], data['id']);
+        return new ProfessionalDTO(data['name'], data['residencialPhone'], data['cellphone'], data['departament'], data['email'], data['identifiedColor'], data['id']);
     }
 
     _template() {
         let template = `
             <div>
                 <input type="hidden" class="form-control" name="id" value="${this._professional.id ? this._professional.id : ''}">
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" min="3" max="20" class="form-control" id="name" name="name" 
-                    placeholder="Maria Souza Silva" value="${this._professional.name ? this._professional.name : ''}">
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="name">Nome</label>
+                        <input type="text" min="3" max="20" class="form-control" id="name" name="name" 
+                        placeholder="Maria Souza Silva" value="${this._professional.name ? this._professional.name : ''}">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">Cor de Identificação</label>
+                        <input type="color" class="form-control" name="identifiedColor" 
+                            value="${this._professional.identifiedColor ? this._professional.identifiedColor : ''}">
+                    </div>
                 </div>
 
                 <div class="form-row">

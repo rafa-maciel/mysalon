@@ -30,7 +30,9 @@ export default class Table extends Component {
 
         data.forEach(prop => {
             let col = document.createElement('td');
-            col.innerHTML = prop;
+
+            prop instanceof Object ? col.appendChild(prop) : col.innerHTML = prop;
+
             line.appendChild(col);
         });
         if (actions) {

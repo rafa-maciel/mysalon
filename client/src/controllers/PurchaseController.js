@@ -20,7 +20,10 @@ export default class PurchaseController extends DefaultDashboardController {
 
     _init() {
         this._service = new PurchaseService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
         
+        this._initTopNavButtons();
         this._initAlertMessages();
         this._initPurchaseTable();
         this._initPurchaseFormModal();
@@ -72,23 +75,51 @@ export default class PurchaseController extends DefaultDashboardController {
 
     }
 
+    _initTopNavButtons() {
+        let elCreate = new Button("Cadastrar Compra", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._createPurchase()}));
+
+        let elFilter = new Button("Filtrar Pesquisa", "btn btn-secondary ", "button", 
+            new ListenerAction("click", () => {this._searchModal.show()}));
+
+        this._buttonsMenuEl.appendChild(elCreate);
+        this._buttonsMenuEl.appendChild(elFilter);
+    }
+
     _initAlertMessages() {
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
         this._message = new BindProxyModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')),
+            new AlertMessageView(messageEl),
             'update');
     }
 
     _initPurchaseTable() {
         this._purchases = new ProxyModelComponent(new ModelList(), 
-            new PurchaseTable('#purchaseList',
+            new PurchaseTable(this._contentEl,
                 id => {this._editPurchase(id)},
                 id => {this._showRemoveConfirmation(id)},
                 notes => {this._showNotes(notes)}),
             'add', 'remove', 'clean');
         
-        this._tableNav = new PageableNavigation("#purchaseList", {'id': 'tableNav'}, page => this.searchPurchases(page));
+        this._tableNav = new PageableNavigation(this._contentEl, {'id': 'tableNav'}, 
+            page => this.searchPurchases(page));
 
-        this._searchModal = new Modal("#searchPanel", {
+        this._initPurchasesSearchForm();
+        this._initPurchaseNotesInforMolda();
+        this.searchPurchases();
+    }
+
+    _initPurchaseNotesInforMolda() {
+        this._notesModal = new Modal(this._contentEl,  {
+            'id': 'notesModal',
+            'title': 'Notas da compra'
+        });
+    }
+
+    _initPurchasesSearchForm() {
+        this._searchModal = new Modal(this._contentEl, {
             'id': 'searchModal',
             'title': 'Filtro de Pesquisa',
         });
@@ -99,20 +130,10 @@ export default class PurchaseController extends DefaultDashboardController {
                 this.searchPurchases();
                 this._searchModal.hide();
             }));
-
-        this._notesModal = new Modal("#purchaseList",  {
-            'id': 'notesModal',
-            'title': 'Notas da compra'
-        });
-
-        document.querySelector('.btn-show-search-modal')
-            .addEventListener('click', () => {this._searchModal.show()});
-
-        this.searchPurchases();
     }
 
     _initPurchaseFormModal() {
-        this._modalForm = new Modal("main", {
+        this._modalForm = new Modal(this._contentEl, {
             'id': 'PurchaseFormModal',
             'title': 'Formulário de Compras',
             'footer': true
@@ -121,8 +142,6 @@ export default class PurchaseController extends DefaultDashboardController {
         this._purchaseForm = new PurchaseForm(this._modalForm.contentSelector);
 
         this._initPurchaseFormModalButtons();
-
-        document.querySelector('.btn-create-purchase').addEventListener('click', () => {this._createPurchase()});
     }
 
     _initPurchaseFormModalButtons() {
@@ -133,7 +152,7 @@ export default class PurchaseController extends DefaultDashboardController {
     }
 
     _initRemoveConfirmationModal() {
-        this._modalRemoveConfirmation = new ConfirmModal("main", {
+        this._modalRemoveConfirmation = new ConfirmModal(this._contentEl, {
             "id": "removeConfirmationModal",
             'title': 'Remover Compra',
             'buttonLabel': 'Remover Definitivamente'

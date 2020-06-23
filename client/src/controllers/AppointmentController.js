@@ -18,29 +18,45 @@ import DateFormatHelper from "../helpers/DateFormatHelper";
 export default class AppointmentController extends DefaultDashboardController {
     _init() {
         this._service = new AppointmentService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
 
+
+        this._initTopNavButtons();
         this._initAlertMessages();
         this._initAppointmentsTable();
         this._initAppointmentFormModal();
         this._initRemoveConfirmationModal();
     }
 
+    _initTopNavButtons() {
+        let elCreate = new Button("Cadastrar Atendimento", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._createAppointment()}));
+
+        let elFilter = new Button("Filtrar Pesquisa", "btn btn-secondary ", "button", 
+            new ListenerAction("click", () => {this._searchModal.show()}));
+
+        this._buttonsMenuEl.appendChild(elCreate);
+        this._buttonsMenuEl.appendChild(elFilter);
+    }
+
     _initAlertMessages() {
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
         this._message = new BindProxyModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')),
+            new AlertMessageView(messageEl),
             'update');
     }
 
     _initAppointmentsTable() {
-        let tablePanel = "#appointmentList";
-
         this._appointments = new ProxyModelComponent(new ModelList(),
-            new AppointmentTable(tablePanel,
+            new AppointmentTable(this._contentEl,
                 id => {this._editAppointment(id)}, 
                 id => {this._showRemoveModalConfirmation(id)}),
             'add', 'remove', 'clean');
 
-        this._tableNav = new PageableNavigation(tablePanel, {
+        this._tableNav = new PageableNavigation(this._contentEl, {
             'id': 'tableNav'
         }, page => {this.searchAppointments(page)});
 
@@ -49,13 +65,10 @@ export default class AppointmentController extends DefaultDashboardController {
     }
 
     _initAppointmentsSearchForm() {
-        this._searchModal = new Modal("main", {
+        this._searchModal = new Modal(this._contentEl, {
             'id': 'searchModal',
             'title': 'Filtro de Pesquisa'
         });
-
-        document.querySelector('.btn-show-search-modal')
-            .addEventListener('click', () => {this._searchModal.show()});
 
         this._searchForm = new AppointmentSearchForm(this._searchModal.contentSelector, 
             new ListenerAction('submit', event => {
@@ -66,7 +79,7 @@ export default class AppointmentController extends DefaultDashboardController {
     }
 
     _initAppointmentFormModal() {
-        this._modalForm = new Modal('main', {
+        this._modalForm = new Modal(this._contentEl, {
             'id': 'appointmentFormModal',
             'title': 'Formulário de Atendimento',
             'footer': true
@@ -78,13 +91,10 @@ export default class AppointmentController extends DefaultDashboardController {
             new Button('Salvar', 'btn btn-primary btn-lg', 'button',
                 new ListenerAction('click', () => {this.saveAppointmentForm()}))
         );
-
-        document.querySelector('.btn-create-appointment')
-            .addEventListener('click', () => {this._createAppointment()});
     }
 
     _initRemoveConfirmationModal() {
-        this._modalRemoveConfirmation = new ConfirmModal("main", {
+        this._modalRemoveConfirmation = new ConfirmModal(this._contentEl, {
             "id": "removeConfirmationModal",
             "title": 'Remover Atendimento',
             "buttonLabel": "Remover Definitivamente"

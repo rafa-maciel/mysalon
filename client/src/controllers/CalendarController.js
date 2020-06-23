@@ -1,37 +1,44 @@
 import DefaultDashboardController from "./DefaultDashboardController";
 import AppointmentService from "../services/AppointmentService";
 import AppointmentCalendar from "../views/AppointmentCalendar";
-import CalendarFilterForm from "../views/CalendarFilterForm";
 import ProfessionalService from "../services/ProfessionalService";
-import ListenerAction from "../components/ListenerAction";
+import ProfessionalSelectOption from "../components/ProfessionalSelectOption";
 
 export default class CalendarController extends DefaultDashboardController {
     _init() {
         this._appointmentService = new AppointmentService();
         this._professionalService = new ProfessionalService();
-        
+        this._contentEl = document.querySelector(".main-content");
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._professional = undefined;
+
         this._initCalendarFilterForm();
     }
 
-    _initCalendarFilterForm() {
-        this._filter = new CalendarFilterForm('.professional-form', new ListenerAction('submit', (event) => {
-            event.preventDefault();
-            this._calendar.extraParameters = this._getFilterParameters();
-        }));
+    _initTopNavButtons() {
+        let selectProfessionalElement = new ProfessionalSelectOption(null, this._professional, 
+            (professional) => {
+                this._calendar.extraParameters = professional;
+            });
 
+        this._buttonsMenuEl.appendChild(selectProfessionalElement.el);
+    }
+
+    _initCalendarFilterForm() {
         this._professionalService.getProfessionalByEmail(this._getProfessionalLoggedEmail())
             .then(professional => {
-                this._filter.professional = professional
+                this._professional = professional;
+                this._initTopNavButtons();
                 this._initCalendarComponent();
             });
     }
 
     _initCalendarComponent() {
-        this._calendar = new AppointmentCalendar('.calendar', this._showEvent, this._getFilterParameters());
+        this._calendar = new AppointmentCalendar(this._contentEl, this._showEvent, this._getInitialParameter());
     }
 
-    _getFilterParameters() {
-        return this._filter.getDataAsParams();
+    _getInitialParameter() {
+        return "professionalId="+this._professional.id;
     }
 
     _showEvent(info) {

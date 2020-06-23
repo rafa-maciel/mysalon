@@ -11,7 +11,7 @@ import CalendarEvent from '../models/CalendarEvent';
 
 export default class AppointmentCalendar {
     constructor(parentSelector, onEventClick, extraParameters='') {
-        let calendarEl = document.querySelector(parentSelector);
+        let calendarEl = parentSelector;
         this._service = new AppointmentService();
         this._extraParameters = extraParameters;
 

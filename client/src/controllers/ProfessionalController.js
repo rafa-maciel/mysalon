@@ -13,21 +13,27 @@ import ConfirmModal from "../components/ConfirmModal";
 import ProxyModelComponent from "../helpers/ProxyModelComponent";
 import DefaultDashboardController from "./DefaultDashboardController";
 
-export default class ProfessionalController extends DefaultDashboardController {
+export default class ProfessionalController extends DefaultDashboardController{
+
     _init() {
         this._service = new ProfessionalService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
 
+        this._initTopNavButtons();
         this._initAlertMessages();
         this._initProfessionalsTable();
         this._initProfessionalFormModal();
         this._initRemoveConfirmationModal();
-        this.updateProfessionalTable();
         this._initModalFormButtons();
         this._initConfirmRestorePassowordModal();
+    }
 
-        document.querySelector('.btn-create-professional').addEventListener('click', () => {
-            this._createProfessional();
-        });
+    _initTopNavButtons() {
+        let elCreate = new Button("Cadastrar Profissional", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._createProfessional()}));
+
+        this._buttonsMenuEl.appendChild(elCreate);
     }
 
     saveProfessionalForm() {
@@ -78,21 +84,26 @@ export default class ProfessionalController extends DefaultDashboardController {
 
     _initProfessionalsTable() {
         this._professionals = new ProxyModelComponent(new ModelList(),
-            new ProfessionalsTable('#professionalList', 
+            new ProfessionalsTable('.main-content', 
                 id => {this._editProfessional(id)},
                 id => {this._confirmRemoveProfessional(id)},
                 email => {this._confirmRestorePassword(email)}),
             'add', 'remove');
+
+        this.updateProfessionalTable();
     }
 
-    _initAlertMessages() {
+    _initAlertMessages(el) {
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
         this._message = new ModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')), 
+            new AlertMessageView(messageEl), 
             'update');
     }
     
     _initProfessionalFormModal() {
-        this._modalForm = new Modal('#modalForm', {
+        this._modalForm = new Modal(this._contentEl, {
             'id': 'MForm',
             'title': 'Formulário do Profissional',
             'footer': true
@@ -102,7 +113,7 @@ export default class ProfessionalController extends DefaultDashboardController {
     }
 
     _initRemoveConfirmationModal() {
-        this._modalConfirmRemove = new ConfirmModal("#modalForm", {
+        this._modalConfirmRemove = new ConfirmModal(this._contentEl, {
             "id": "modalConfirmRemove",
             "title": "Remover Profissional", 
             "buttonLabel": "Remover definitivamente"
@@ -116,7 +127,7 @@ export default class ProfessionalController extends DefaultDashboardController {
     }
 
     _initConfirmRestorePassowordModal() {
-        this._modalRestorePassword = new ConfirmModal('main', {
+        this._modalRestorePassword = new ConfirmModal(this._contentEl, {
             'id': 'restorePasswordModal',
             'title': 'Restaurar Senha',
             'buttonLabel': 'Restaurar senha e enviar E-mail'

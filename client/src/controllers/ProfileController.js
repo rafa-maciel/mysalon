@@ -8,24 +8,39 @@ import AlertMessageView from "../views/AlertMessageView";
 import HttpHelper from "../helpers/HttpHelper";
 import Modal from "../components/Modal";
 import PasswordResetForm from "../views/PasswordResetForm";
+import Button from "../components/Button";
 
 export default class ProfileController extends DefaultDashboardController {
     _init() {
         this._service = new ProfessionalService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
 
+        this._initTopNavButtons();
         this._initMessages();
         this._initProfilePanel();
         this._initPasswordResetModal();
     }
+
+    _initTopNavButtons() {
+        let resetPasswordEl = new Button("Resetar Minha Senha", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._showPasswordResetModal()}));
+
+        this._buttonsMenuEl.appendChild(resetPasswordEl);
+    }
+
     
     _initMessages() {
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
         this._message = new BindProxyModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')),
+            new AlertMessageView(messageEl),
             'update');
     }
 
     _initProfilePanel() {
-        this._profileForm = new ProfessionalForm('#profileForm', true, 
+        this._profileForm = new ProfessionalForm(this._contentEl, true, 
         new ListenerAction('submit', event => {
             event.preventDefault();
             this.saveProfile();
@@ -43,7 +58,7 @@ export default class ProfileController extends DefaultDashboardController {
     }
 
     _initPasswordResetModal() {
-        this._passwordResetModal = new Modal('main', {
+        this._passwordResetModal = new Modal(this._contentEl, {
             'id': 'pwdresetModal',
             'title': 'Resetar Minha Senha',
             'footer': false
@@ -54,11 +69,6 @@ export default class ProfileController extends DefaultDashboardController {
                 event.preventDefault();
                 this.resetPassword();
             }));
-
-        document.querySelector('.btn-reset-password').addEventListener('click', event => {
-            event.preventDefault();
-            this._showPasswordResetModal();
-        });
     }
 
     _showPasswordResetModal() {

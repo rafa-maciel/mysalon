@@ -26,7 +26,12 @@ export default class AppointmentForm extends Form {
                 this.updateFields();
             });
 
-        this._customerModal = new Modal('main', {
+        let modalPanel = document.createElement("div");
+        modalPanel.setAttribute("id", "customerSeModal");
+
+        this._component.appendChild(modalPanel);
+
+        this._customerModal = new Modal("#customerSeModal", {
             'id': 'customerSelectionModal',
             'title': "Cadastrar novo Cliente",
             'footer': true

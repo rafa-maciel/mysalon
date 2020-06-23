@@ -25,5 +25,6 @@ server/my-saloon/my-saloon/target
 
 
 ### Node ###
+!**/client/node_modules/**
 client/node_modules
 

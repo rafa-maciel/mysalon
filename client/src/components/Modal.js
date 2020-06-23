@@ -1,5 +1,5 @@
-import DOMParserUtil from "../helpers/DOMParserUtil";
 import Component from "./Component";
+import $ from 'jquery';
 
 export default class Modal extends Component{
     /* 
@@ -14,6 +14,20 @@ export default class Modal extends Component{
             "listeners": listeners for modal actions
         }
     */
+
+    _init() {
+        super._init();
+        this._header = this._component.querySelector(this._tag+"ModalHeader");
+        this._body = this._component.querySelector(this._tag+"ModalBody");
+        this._footer = this._component.querySelector(this._tag+"ModalFooter");
+
+        if (this._info.initialContent) 
+            this._body.appendChild(this._info.initialContent);
+
+        if (this._info.footer && this._info.initialFooter)
+            this._footer.appendChild(this._info.initialFooter);
+    }
+
     show() {
         $(this._tag).modal('show');
     }
@@ -23,40 +37,30 @@ export default class Modal extends Component{
     }
 
 
-    updateContent(content) {
-        document.querySelector(`${this._tag} .modal-body`).innerHTML = '';
-        document.querySelector(`${this._tag} .modal-body`).appendChild(content);
+    updateContent(contentEl) {
+        this._body.innerHTML = '';
+        this._body.appendChild(contentEl);
     }
 
     cleanContent() {
-        document.querySelector(`${this._tag} .modal-body`).innerHTML = '';
+        this._body.innerHTML = '';
     }
 
-    updateContentText(content) {
-        document.querySelector(`${this._tag} .modal-body`).innerHTML = '<pre>' + content + '</pre>';
+    updateContentText(contentEl) {
+        this._body.innerHTML = '<pre>' + contentEl + '</pre>';
     }
 
-    updateFooter(footer) {
-        document.querySelector(`${this._tag} .modal-footer`).innerHTML = '';
-        document.querySelector(`${this._tag} .modal-footer`).appendChild(footer);
+    updateFooter(childEl) {
+        this._footer.innerHTML = '';
+        this._footer.appendChild(childEl);
     }
 
     cleanFooter() {
-        document.querySelector(`${this._tag} .modal-footer`).innerHTML = '';
+        this._footer.innerHTML = '';
     }
 
     get contentSelector() {
-        return `${this._tag} .modal-body`;
-    }
-
-    _init() {
-        super._init();
-
-        if (this._info.initialContent) 
-            this._component.querySelector(".modal-body").appendChild(this._info.initialContent);
-
-        if (this._info.footer && this._info.initialFooter)
-            this._component.querySelector(".modal-footer").appendChild(this._info.initialFooter);
+        return `${this._tag}ModalBody`;
     }
 
     _initListeners(listeners) {
@@ -72,18 +76,18 @@ export default class Modal extends Component{
         <div id="${info.id}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="${info.label ? info.label : 'myLargeModal'}" aria-hidden="true">
             <div class="modal-dialog ${info.modalClass ? info.modalClass : ''}" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" id="${info.id}modalHeader">
                         <h5 class="modal-title">${info.title}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
             
-                    <div class="modal-body">
+                    <div class="modal-body" id="${info.id}ModalBody">
                     </div>
 
                     ${info.footer ? `
-                    <div class="modal-footer">
+                    <div class="modal-footer" id="${info.id}ModalFooter">
                         
                     </div>
                     ` : ''}

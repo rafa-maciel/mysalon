@@ -9,7 +9,15 @@ export default class Component {
 
         this._init();
 
-        document.querySelector(this._parentSelector).appendChild(this._component);
+        if (parentSelector instanceof Object) {
+            parentSelector.appendChild(this._component);
+        } else if (parentSelector != null && parentSelector != undefined) {
+            document.querySelector(this._parentSelector).appendChild(this._component);
+        }
+    }
+
+    get el() {
+        return this._component;
     }
 
     _init() {

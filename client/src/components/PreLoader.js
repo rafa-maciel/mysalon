@@ -3,7 +3,7 @@ import DOMParserUtil from "../helpers/DOMParserUtil";
 
 export default class PreLoader extends Component {
     constructor() {
-        super('#headerNavigation');
+        super('#dashboardLayout');
         this._initLoaderComponent();
     }
 

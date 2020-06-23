@@ -1,4 +1,5 @@
 import Component from "./Component";
+import $ from "jquery";
 
 export default class Form extends Component{
      /* 
@@ -27,9 +28,9 @@ export default class Form extends Component{
 
     getData() {
         let data = [];
-        $(this._tag).serializeArray().forEach(input => {
-            data[input.name] = input.value;
-        });
+        for (let field of new FormData(this._component).entries()) {
+            data[field[0]] = field[1];
+        }
         return data;
     }
 

@@ -19,16 +19,16 @@ export default class CustomerController extends DefaultDashboardController {
 
     _init() {
         this._service = new CustomerService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
 
+        this._initTopNavButtons();
         this._initAlertMessages();
         this._initRemoveConfirmationModal();
         this._initCustomerFormModal();
         this._initCustomersTable();
         this.searchCustomers();
         this._initModalFormButtons();
-
-        document.querySelector('.btn-create-customer').addEventListener('click', () => {this._createCustomer()});
-
     }
 
     saveCustomerForm() {
@@ -90,12 +90,12 @@ export default class CustomerController extends DefaultDashboardController {
 
     _initCustomersTable() {
         this._customers = new ProxyModelComponent(new ModelList(), 
-            new CustomersTable('#customerList', 
+            new CustomersTable(this._contentEl, 
                 id => {this._editCustomer(id)}, 
                 id => {this._confirmRemoveCustomer(id)}),
             'add', 'remove', 'clean');
 
-        this._modalSearchForm = new Modal('main', {
+        this._modalSearchForm = new Modal(this._contentEl, {
             'id': 'modalSearchForm',
             'title': 'Filtro de pesquisa'
         });
@@ -107,17 +107,14 @@ export default class CustomerController extends DefaultDashboardController {
             this._modalSearchForm.hide();
         }));
 
-        document.querySelector('.btn-show-search-modal')
-            .addEventListener('click', () => {this._modalSearchForm.show()});
 
-
-        this._pageable = new PageableNavigation('#customerList', {
+        this._pageable = new PageableNavigation(this._contentEl, {
             'id': 'customerListPagination', 
         }, page => {this.searchCustomers(page)});
     }
 
     _initCustomerFormModal() {
-        this._modalForm = new Modal('main', {
+        this._modalForm = new Modal(this._contentEl, {
             'id': 'mForm',
             'title': 'Formulário do Cliente',
             'footer': true
@@ -127,7 +124,7 @@ export default class CustomerController extends DefaultDashboardController {
     }
 
     _initRemoveConfirmationModal() {
-        this._modalConfirmRemove = new ConfirmModal("main", {
+        this._modalConfirmRemove = new ConfirmModal(this._contentEl, {
             "id": "modalConfirmRemove",
             "title": "Remover Cliente", 
             "buttonLabel": "Remover definitivamente"
@@ -135,9 +132,23 @@ export default class CustomerController extends DefaultDashboardController {
     }
 
     _initAlertMessages() {
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
         this._message = new ProxyModelView(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')), 
+            new AlertMessageView(messageEl), 
             'update');
+    }
+
+    _initTopNavButtons() {
+        let elCreate = new Button("Cadastrar Cliente", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._createCustomer()}));
+
+        let elFilter = new Button("Filtrar Pesquisa", "btn btn-secondary ", "button", 
+            new ListenerAction("click", () => {this._modalSearchForm.show()}));
+
+        this._buttonsMenuEl.appendChild(elCreate);
+        this._buttonsMenuEl.appendChild(elFilter);
     }
 
     _initModalFormButtons() {

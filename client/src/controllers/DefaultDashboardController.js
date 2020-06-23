@@ -1,8 +1,6 @@
-import DashboardNavigation from '../components/DashboardNavigation';
-import HeaderNavigation from '../components/HeaderNavigation';
-import ListenerAction from '../components/ListenerAction';
 import AuthenticationTokenService from '../services/AuthenticationTokenService';
 import PreLoader from '../components/PreLoader';
+import '../../dist/css/style.css';
 
 
 export default class DefaultDashboardController {
@@ -12,12 +10,7 @@ export default class DefaultDashboardController {
         this._authService = new AuthenticationTokenService();
         this._validAuthenticatedClient();
 
-        this._headerNav = new HeaderNavigation('#headerNavigation', new ListenerAction('click', event => {
-            this.doLogoff();
-        }));        
-
-        this._dashboardNav = new DashboardNavigation('#dashboardNavigation');
-
+        document.querySelector(".app-sign-out").addEventListener("click", () => {this.doLogoff()});
         this._init();
     }
 

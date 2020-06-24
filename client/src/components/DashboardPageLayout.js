@@ -1,8 +1,8 @@
 import Component from "./Component";
 
 export default class DashboardPageLayout extends Component {
-    constructor() {
-        super('#dashboardLayout');
+    constructor(parentNode) {
+        super(parentNode);
     }
 
     get sidebarNavSelector() {

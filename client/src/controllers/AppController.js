@@ -1,12 +1,34 @@
 import SidebarNav from "../components/SidebarNav";
 import ListenerAction from "../components/ListenerAction";
 import DashboardPageLayout from "../components/DashboardPageLayout";
+import LocalStorageService from "../services/LocalStorageService";
+import AuthenticationTokenService from "../services/AuthenticationTokenService";
+import AuthenticationController from "./AuthenticationController";
 
 export default class AppController {
 
     constructor() {
-        this._layout = new DashboardPageLayout();
+        this._authService = new AuthenticationTokenService();
+        this._mainNode = document.querySelector("#dashboardLayout");
+        
+        this._initPageLayout();
+    }
+
+    _initPageLayout() {
+        if (this._authService.hasValidToken()) {
+            this._initDashboardPageLayout();
+        } else {
+            this._initLoginController();
+        }
+    }
+
+    _initDashboardPageLayout() {
+        this._layout = new DashboardPageLayout(this._mainNode);
         this._initSidebar();
+    }
+
+    _initLoginController() {
+        new AuthenticationController(this._mainNode);
     }
 
     _initSidebar() {
@@ -14,7 +36,6 @@ export default class AppController {
 
         this._sidebar.addItemListenerAction('professionals', 
             new ListenerAction('click', () => {this._startProfessionalController()}));
-
 
         this._sidebar.addItemListenerAction('customers', 
             new ListenerAction('click', () => {this._startCustomerController()}));
@@ -30,6 +51,9 @@ export default class AppController {
         
         this._sidebar.addItemListenerAction('profile', 
             new ListenerAction('click', () => {this._startProfileController()}));
+
+        this._sidebar.addItemListenerAction('app-sign-out', 
+            new ListenerAction('click', () => {this._startAuthenticationController()}));
     }
 
     get layout() {
@@ -70,6 +94,12 @@ export default class AppController {
         this._cleanOlderContent();
         import('./ProfileController')
             .then((ProfileController) => {new ProfileController.default()});
+    }
+
+    _startAuthenticationController() {
+        this._cleanOlderContent();
+        import('./AuthenticationController')
+            .then(() => {new AuthenticationController(this._mainNode)});
     }
 
     _cleanOlderContent() {

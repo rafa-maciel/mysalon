@@ -6,7 +6,7 @@ export default class AuthenticationForm extends Form {
     constructor(parentSelector, ...listeners) {
         super(parentSelector, {
             'id': 'authenticationForm',
-            'formClass': 'form-signin needs-validation',
+            'formClass': 'user form-signin needs-validation',
             listeners
         });
 
@@ -27,6 +27,14 @@ export default class AuthenticationForm extends Form {
     _template() {
         let template = `
         <div>
+            <div class="form-group">
+                <input type="email" name="email" class="form-control form-control-user ${this._isInvalid ? 'is-invalid' : ''}" 
+                    id="email" aria-describedby="emailHelp" placeholder="Entre com o e-mail cadastrado">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control form-control-user ${this._isInvalid ? 'is-invalid' : ''}" id="password" placeholder="Senha">
+            </div>
+
             ${this._isInvalid ? 
                 `
                 <div class="alert alert-warning" role="alert">
@@ -34,17 +42,10 @@ export default class AuthenticationForm extends Form {
                 </div>
                 ` : ''}
 
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" min="3" max="20" class="form-control ${this._isInvalid ? 'is-invalid' : ''}" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" min="3" max="20" class="form-control  ${this._isInvalid ? 'is-invalid' : ''}" id="password" name="password" required>
-            </div>
-
-            <button type='submit' class='btn btn-primary btn-lg btn-block'>Entrar</button>
+            
+            <button type="submit" class="btn btn-primary btn-user btn-block">
+                Entrar
+            </button>
         </div>
         `;
 

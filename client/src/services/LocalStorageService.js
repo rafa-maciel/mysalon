@@ -15,17 +15,16 @@ export default class LocalStorageService {
     }
 
     cleanAuthToken() {
-        this._storage.setItem(this._tokenKey, null);
-        this._storage.setItem(this._tokenExpirationKey, null);
-        this._storage.setItem(this._tokenUserKey, null);
+        this._storage.removeItem(this._tokenKey);
+        this._storage.removeItem(this._tokenExpirationKey);
+        this._storage.removeItem(this._tokenUserKey);
     }
     
     get authToken() {
-
         let fulltoken = this._storage.getItem(this._tokenKey);
         let expiration = this._storage.getItem(this._tokenExpirationKey);
         let user = this._storage.getItem(this._tokenUserKey);
-
+        
         if (fulltoken == null || expiration == null || user == null) return null;
 
         let auth = AuthToken.buildFromFullToken(user, fulltoken, expiration);

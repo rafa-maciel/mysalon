@@ -28,7 +28,7 @@ export default class AppController {
         this._sidebar.addItemListenerAction('calendar', 
             new ListenerAction('click', () => {this._startCalendarController()}));
         
-            this._sidebar.addItemListenerAction('profile', 
+        this._sidebar.addItemListenerAction('profile', 
             new ListenerAction('click', () => {this._startProfileController()}));
     }
 

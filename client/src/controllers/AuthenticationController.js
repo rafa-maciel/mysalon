@@ -16,20 +16,20 @@ export default class AuthenticationController {
     }
 
     _redirectAuthenticateds() {
-        this._authService.hasValidToken()
-            .then(() => {window.location.href = '/app.html'})
-            .catch(error => {});
+        if (this._authService.hasValidToken()) {
+            window.location.href = '/app.html'
+        }
     }
 
     sigin() {
         let dto = this._form.getAuthenticationDTO();
-        let http = new HttpHelper();
+        
         this._authService.authenticate(dto)
             .then(() => {
                 window.location.href = '/app.html';
-                http.storeItem('email', dto.email);
             })
-            .catch(() => {
+            .catch(err => {
+                console.log(err);
                 this._form.invalidFormData();
             });
     }

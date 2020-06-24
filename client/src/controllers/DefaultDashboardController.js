@@ -10,7 +10,10 @@ export default class DefaultDashboardController {
         this._authService = new AuthenticationTokenService();
         this._validAuthenticatedClient();
 
-        document.querySelector(".app-sign-out").addEventListener("click", () => {this.doLogoff()});
+        document.querySelector(".app-sign-out").addEventListener("click", () => {
+            console.log("doing logoff");
+            this.doLogoff()
+        });
         this._init();
     }
 
@@ -28,7 +31,7 @@ export default class DefaultDashboardController {
     }
 
     _validAuthenticatedClient() {
-        this._authService.hasValidToken()
-            .catch(() => {this._authService.redirectToLoginPage()});
+        if (!this._authService.hasValidToken()) 
+            this._authService.redirectToLoginPage();
     }
 }

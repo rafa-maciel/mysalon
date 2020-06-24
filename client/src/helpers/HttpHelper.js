@@ -1,26 +1,10 @@
 import FieldError from "../forms/FieldError";
 import AuthenticationTokenService from "../services/AuthenticationTokenService";
+import LocalStorageService from "../services/LocalStorageService";
 
 export default class HttpHelper {
-    addToken(type, token) {
-        let data = `${type} ${token}`;
-        window.localStorage.setItem('msaloonwbtoken', data);
-    }
-
-    storeItem(label, value) {
-        window.localStorage.setItem(label, value);
-    }
-
-    cleanToken() {
-        window.localStorage.setItem('msaloonwbtoken', null);
-    }
-
-    get token() {
-        return window.localStorage.getItem('msaloonwbtoken');
-    }
-
-    getStoredItem(label) {
-        return window.localStorage.getItem(label);
+    constructor() {
+        this._storageService = new LocalStorageService();
     }
 
     post(endpoint, data) {
@@ -53,7 +37,7 @@ export default class HttpHelper {
     _buildTransactionHeaders() {
         return new Headers({
             'Content-type': 'Application/json',
-            'Authorization': this.token
+            'Authorization': this._storageService.authToken.fullToken
         });
     }
 

@@ -46,6 +46,9 @@ export default class AppController {
         this._sidebar.addItemListenerAction('purchases', 
             new ListenerAction('click', () => {this._startPurchasesController()}));
 
+        this._sidebar.addItemListenerAction('vendors', 
+            new ListenerAction('click', () => {this._startVendorsController()}));
+
         this._sidebar.addItemListenerAction('calendar', 
             new ListenerAction('click', () => {this._startCalendarController()}));
         
@@ -76,6 +79,12 @@ export default class AppController {
         this._cleanOlderContent();
         import('./AppointmentController')
             .then((AppointmentController) => {new AppointmentController.default()});
+    }
+
+    _startVendorsController() {
+        this._cleanOlderContent();
+        import('./VendorController')
+            .then((VendorController) => {new VendorController.default()});
     }
 
     _startPurchasesController() {

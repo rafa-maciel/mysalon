@@ -1,4 +1,4 @@
-import BindProxy from '../helpers/BindProxyModelView'
+import BindProxyModelView from '../helpers/BindProxyModelView'
 import ModelList from '../models/ModelList'
 import VendorService from '../services/VendorService';
 import AlertMessage from '../models/AlertMessage';
@@ -17,14 +17,15 @@ import DefaultDashboardController from './DefaultDashboardController';
 export default class VendorController extends DefaultDashboardController {
     _init() {
         this._service = new VendorService();
+        this._buttonsMenuEl = document.querySelector(".buttons-menu-bar");
+        this._contentEl = document.querySelector(".main-content");
 
-        this._initVendorsTable();
+        this._initTopNavButtons();
         this._initAlertMessages();
+        this._initVendorsTable();
         this._initVendorFormModal();
         this._initRemoveConfirmationModal();
         this._initModalFormButtons();
-
-        document.querySelector('.btn-create-vendor').addEventListener('click', () => {this._createVendor()});
     }
 
     saveVendorForm() {
@@ -69,8 +70,15 @@ export default class VendorController extends DefaultDashboardController {
         );
     }
 
+    _initTopNavButtons() {
+        let elCreate = new Button("Cadastrar Fornecedor", "btn btn-primary ", "button", 
+            new ListenerAction("click", () => {this._createVendor()}));
+
+        this._buttonsMenuEl.appendChild(elCreate);
+    }
+
     _initVendorFormModal() {
-        this._modalForm = new Modal('main', {
+        this._modalForm = new Modal(this._contentEl, {
             'id': 'mForm',
             'title': 'Formulário do Fornecedor',
             'footer': true
@@ -81,7 +89,7 @@ export default class VendorController extends DefaultDashboardController {
 
     _initVendorsTable() {
         this._vendors = new ProxyModelComponent(new ModelList(), 
-            new VendorsTable('#vendorsList', 
+            new VendorsTable(this._contentEl, 
                 id => {this._editVendor(id)}, 
                 id => {this._confirmRemoveVendor(id)}), 
             'add', 'remove');
@@ -90,8 +98,11 @@ export default class VendorController extends DefaultDashboardController {
     }
 
     _initAlertMessages() {
-        this._message = new BindProxy(new AlertMessage(),
-            new AlertMessageView(document.querySelector('#alertMessage')),
+        let messageEl = document.createElement("div");
+        this._contentEl.appendChild(messageEl);
+
+        this._message = new BindProxyModelView(new AlertMessage(),
+            new AlertMessageView(messageEl),
             'update');
     }
 
@@ -102,7 +113,7 @@ export default class VendorController extends DefaultDashboardController {
             "buttonLabel": "Remover definitivamente"
         }
 
-        this._modalConfirmRemove = new ConfirmModal("main", modalDetails, id => {this.delete(id)});
+        this._modalConfirmRemove = new ConfirmModal(this._contentEl, modalDetails, id => {this.delete(id)});
     }
 
     _initModalFormButtons() {

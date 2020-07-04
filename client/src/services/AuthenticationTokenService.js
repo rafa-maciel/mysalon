@@ -32,6 +32,7 @@ export default class AuthenticationTokenService {
 
         return fetch(this._authEndpoint, transactionDetails)
             .then(res => {
+                console.log(res);
                 if (res.ok && res.status == 200) {
                     return res.json();
                 }
@@ -39,6 +40,9 @@ export default class AuthenticationTokenService {
             }).then(data => {
                 let authToken = new AuthToken(authDTO.email, data.type, data.token, data.expiration);
                 this._localStoregeService.storeAuthToken(authToken);
+            }).catch(error => {
+                console.log(error);
+                throw new Error(error);
             });
     }
 

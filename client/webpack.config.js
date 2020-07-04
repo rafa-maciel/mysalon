@@ -6,7 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 let plugins = [];
 
-SERVICE_URL = JSON.stringify('http://localhost:8080');
+SERVICE_URL = JSON.stringify('http://167.172.118.241:8080');
 
 
 plugins.push(new webpack.DefinePlugin({ SERVICE_URL }));

@@ -80,6 +80,12 @@ export default class SidebarNav extends Component{
                         <span>Atendimentos</span></a>
                     </li>
 
+                    <li class="nav-item vendors">
+                        <a class="nav-link">
+                        <i class="fa-fw fas fa-hands-helping"></i>
+                        <span>Fornecedores</span></a>
+                    </li>
+
                     <li class="nav-item purchases">
                         <a class="nav-link">
                         <i class="fa-fw fas fa-shopping-basket"></i>

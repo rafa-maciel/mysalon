@@ -9,6 +9,7 @@ import HttpHelper from "../helpers/HttpHelper";
 import Modal from "../components/Modal";
 import PasswordResetForm from "../views/PasswordResetForm";
 import Button from "../components/Button";
+import LocalStorageService from "../services/LocalStorageService";
 
 export default class ProfileController extends DefaultDashboardController {
     _init() {
@@ -48,7 +49,7 @@ export default class ProfileController extends DefaultDashboardController {
 
         
         
-        let email = new HttpHelper().getStoredItem('email');
+        let email = new LocalStorageService().authToken.user;
         this._preLoader.run(
             this._service.getProfessionalByEmail(email)
                 .then(professiontal => {

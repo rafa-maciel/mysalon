@@ -42,7 +42,7 @@ export default class AuthenticationController {
 
     _redirectAuthenticateds() {
         if (this._authService.hasValidToken()) {
-            window.location.href = '/app.html'
+            window.location.reload();
         }
     }
 
@@ -51,7 +51,7 @@ export default class AuthenticationController {
         
         this._authService.authenticate(dto)
             .then(() => {
-                window.location.href = '/app.html';
+                window.location.reload();
             })
             .catch(err => {
                 console.log(err);
